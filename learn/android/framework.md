@@ -1,0 +1,1 @@
+Activity/Fragment has lifecycles, if we transfer the lifecycle to the layer
