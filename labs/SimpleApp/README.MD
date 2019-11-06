@@ -46,7 +46,7 @@ I want a page showing the event list, some features need support
 - App
   |- src
     |- com
-      |- active
+      |- yanchuanosaurus
         |- app
           |- contracts
             |- event

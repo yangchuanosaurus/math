@@ -1,4 +1,4 @@
-package com.activenetwork.eventapp;
+package com.yangchuanosaurus.eventapp;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.activenetwork.eventapp", appContext.getPackageName());
+        assertEquals("com.yangchuanosaurus.eventapp", appContext.getPackageName());
     }
 }

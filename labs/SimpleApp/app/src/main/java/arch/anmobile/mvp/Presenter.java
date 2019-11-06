@@ -3,7 +3,7 @@ package arch.anmobile.mvp;
 public abstract class Presenter<V extends View> {
     private V mView;
 
-    public void bindView(V view) {
+    void bindView(V view) {
         mView = view;
     }
 

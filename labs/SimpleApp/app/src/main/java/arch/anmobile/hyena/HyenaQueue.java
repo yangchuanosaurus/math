@@ -19,7 +19,7 @@ import arch.anmobile.hyena.support.HyenaTaskFilter;
 
 /**
  * Created by Albert Zhao on 2019-10-28.
- * Copyright (c) 2019 Android Mobile ActiveNetwork. All rights reserved.
+ * Copyright (c) 2019 Android Mobile Yangchuanosaurus. All rights reserved.
  */
 public class HyenaQueue {
 

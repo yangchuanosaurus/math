@@ -1,4 +1,4 @@
-package com.activenetwork.eventapp;
+package com.yangchuanosaurus.eventapp;
 
 import org.junit.Test;
 

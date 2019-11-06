@@ -1,6 +1,6 @@
-package com.activenetwork.eventapp.presenters;
+package com.yangchuanosaurus.eventapp.presenters;
 
-import com.activenetwork.eventapp.contracts.EventListContract;
+import com.yangchuanosaurus.eventapp.contracts.EventListContract;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import repository.app.data.Event;
 
 /**
  * Created by Albert Zhao on 2019-11-06.
- * Copyright (c) 2019 Android Mobile ActiveNetwork. All rights reserved.
+ * Copyright (c) 2019 Android Mobile Yangchuanosaurus. All rights reserved.
  */
 public class EventListPresenter extends Presenter<EventListContract.View> implements EventListContract.Presenter {
 

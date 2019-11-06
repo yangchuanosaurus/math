@@ -1,11 +1,11 @@
-package com.activenetwork.eventapp.views;
+package com.yangchuanosaurus.eventapp.views;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.activenetwork.eventapp.contracts.EventListContract;
-import com.activenetwork.eventapp.presenters.EventListPresenter;
+import com.yangchuanosaurus.eventapp.contracts.EventListContract;
+import com.yangchuanosaurus.eventapp.presenters.EventListPresenter;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import repository.app.data.Event;
 
 /**
  * Created by Albert Zhao on 2019-11-06.
- * Copyright (c) 2019 Android Mobile ActiveNetwork. All rights reserved.
+ * Copyright (c) 2019 Android Mobile Yangchuanosaurus. All rights reserved.
  */
 public class EventListActivity extends AppCompatActivity implements EventListContract.View {
 
