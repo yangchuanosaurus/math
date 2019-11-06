@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':anmobile-annotations', ':anmobile-annotation-processor'
 rootProject.name='SimpleApp'

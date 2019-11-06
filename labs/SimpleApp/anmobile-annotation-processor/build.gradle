@@ -1,0 +1,11 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.google.collections:google-collections:1.0-rc2'
+    implementation project(':anmobile-annotations')
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
