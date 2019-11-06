@@ -27,7 +27,7 @@ public class EventListPresenter extends Presenter<EventListContract.View>
     public void loadEventList() {
         storyEditor().write(EventListPresenter.class, "loadEventList()");
 
-        HyenaQueue foregroundQueue = AnFramework.get().getForegroundQueue();
+        HyenaQueue foregroundQueue = AnFramework.instance().getForegroundQueue();
 
         eventRepository = RepositoryManager.getEventRepository(foregroundQueue);
         eventRepository.getEventList(new Callback<List<Event>>() {

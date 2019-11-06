@@ -19,7 +19,7 @@ public class EventApplication extends Application {
 
         new AnFramework.AnFrameworkBuilder()
                 .setQueueSize(SIZE_FOREGROUND_QUEUE, SIZE_BACKGROUND_QUEUE)
-                .build();
+                .build(this);
     }
 
     @Override
