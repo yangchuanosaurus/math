@@ -30,9 +30,9 @@ public class Equation {
     @Override
     public String toString() {
         if (Style.Addition == style) {
-            return number + " + " + anotherNumber + " = " + " ? ";
+            return number + " + " + anotherNumber + " = ";
         } else if (Style.Subtraction == style) {
-            return number + " - " + anotherNumber + " = " + " ? ";
+            return number + " – " + anotherNumber + " = ";
         }
         return "Equation{" +
                 "number=" + number +

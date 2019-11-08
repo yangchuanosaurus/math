@@ -1,5 +1,6 @@
 package com.yangchuanosaurus.children.count;
 
+
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 
@@ -8,22 +9,20 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class CountApp {
 
     public static void main(String args[]) throws Exception {
-//        AdditionCount additionCount = CountFactory.createAdditionCount(10);
-//        additionCount.getEquations().forEach(equation -> {
-//            System.out.println(equation);
-//        });
-
+        AdditionCount additionCount = CountFactory.createAdditionCount(10);
         SubtractionCount subtractionCount = CountFactory.createSubtractionCount(10);
-        subtractionCount.getEquations().forEach(equation -> {
-            System.out.println(equation);
-        });
+        List<Equation> combinedEquations = new ArrayList<>();
+        combinedEquations.addAll(additionCount.getEquations());
+        combinedEquations.addAll(subtractionCount.getEquations());
 
-        PdfFactory.generatePdf("count_10_addition.pdf");
+        PdfFactory.generatePdf("count_10_addition.pdf", combinedEquations);
     }
 
     private static void createPdf() throws Exception {

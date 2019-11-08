@@ -1,45 +1,51 @@
 package com.yangchuanosaurus.children.count;
 
-import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfDiv;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.FileOutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class PdfFactory {
 
-    public static final String FONT = "NotoMono-Regular.ttf";
+    public static final String FONT = "NotoSansCJKsc-Regular.otf";//"NotoMono-Regular.ttf";
     public static final String CHINESE = "\u5341\u950a\u57cb\u4f0f";
 
-    public static void generatePdf(String fileName) throws Exception {
+    public static void generatePdf(String fileName, List<Equation> equationList) throws Exception {
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(fileName));
 
         document.open();
 
-        // Insert Text
-        Font font = FontFactory.getFont(FONT, 16, BaseColor.BLACK);
-        Paragraph header = new Paragraph("Header", font);
-        document.add(header);
-//        Chunk chunk = new Chunk("算数", font);
+        int equationSize = equationList.size();
+        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+        Chunk chunk = new Chunk(equationSize + " total, " + (100.0f / equationSize) + " / equation, score 100.", font);
+        document.add(chunk);
 
-//        document.add(Chunk.NEWLINE);
-
-        Font afont = FontFactory.getFont(FONT, 12, BaseColor.BLACK);
-//        document.add(new Paragraph("Name", afont));
-        document.add(new Chunk("Name", afont));
-
+        //
+        long seed = System.nanoTime();
+        Collections.shuffle(equationList, new Random(seed));
 
         // Insert Table
-//        PdfPTable table = new PdfPTable(3);
-//        addTableHeader(table);
-//        addRows(table);
-//        addCustomRows(table);
-//        document.add(table);
+        PdfPTable table = new PdfPTable(3);
+        addRows(table, equationList);
+        PdfDiv tableDiv = new PdfDiv();
+        tableDiv.addElement(table);
+        document.add(tableDiv);
 
         document.close();
+
+        System.out.println(equationSize + " equation has been created in " + fileName + ", print it on paper.");
+    }
+
+    private static void addRows(PdfPTable table, List<Equation> equationList) {
+        for (int i = 0; i < equationList.size(); i++) {
+            Equation equation = equationList.get(i);
+            table.addCell(equation.toString());
+        }
     }
 }
