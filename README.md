@@ -9,6 +9,9 @@ Simplify, I will print a math paper for my children everyday, such as addition, 
 Using SprintBoot generate a pdf
 https://www.baeldung.com/java-pdf-creation
 
+Nice Font Library
+https://www.google.com/get/noto/#mono-mono
+
 Oct 10, 2019
 How to render Math expression on web?
 https://www.mathjax.org/
