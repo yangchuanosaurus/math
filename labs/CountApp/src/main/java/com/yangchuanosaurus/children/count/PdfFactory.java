@@ -2,6 +2,7 @@ package com.yangchuanosaurus.children.count;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfDiv;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -21,20 +22,34 @@ public class PdfFactory {
 
         document.open();
 
+        Paragraph paraHeader = new Paragraph();
+        Font headerFont = FontFactory.getFont(FontFactory.COURIER, 20, BaseColor.BLACK);
+        Chunk headerChunk = new Chunk("Count Exercises", headerFont);
+        paraHeader.add(headerChunk);
+        paraHeader.setAlignment(Element.ALIGN_CENTER);
+        document.add(paraHeader);
+
         int equationSize = equationList.size();
-        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+        Font font = FontFactory.getFont(FontFactory.COURIER, 14, BaseColor.BLACK);
         Chunk chunk = new Chunk(equationSize + " total, " + (100.0f / equationSize) + " / equation, score 100.", font);
-        document.add(chunk);
+        Paragraph paraSummary = new Paragraph();
+        paraSummary.setAlignment(Element.ALIGN_CENTER);
+        paraSummary.add(chunk);
+        document.add(paraSummary);
 
         //
         long seed = System.nanoTime();
         Collections.shuffle(equationList, new Random(seed));
 
         // Insert Table
-        PdfPTable table = new PdfPTable(3);
+        PdfPTable table = new PdfPTable(4);
         addRows(table, equationList);
         PdfDiv tableDiv = new PdfDiv();
         tableDiv.addElement(table);
+
+        table.setSpacingBefore(20);
+        table.setSpacingAfter(20);
+
         document.add(tableDiv);
 
         document.close();
@@ -43,9 +58,14 @@ public class PdfFactory {
     }
 
     private static void addRows(PdfPTable table, List<Equation> equationList) {
+        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
         for (int i = 0; i < equationList.size(); i++) {
             Equation equation = equationList.get(i);
-            table.addCell(equation.toString());
+//            table.addCell(equation.toString());
+            Phrase phrase = new Phrase(equation.toString(), font);
+            PdfPCell cell = new PdfPCell(phrase);
+            cell.setVerticalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
         }
     }
 }

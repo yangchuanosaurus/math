@@ -1,8 +1,10 @@
 package com.yangchuanosaurus.children.count;
 
-
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,9 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CountApp {
+@SpringBootApplication
+public class CountApp implements CommandLineRunner {
 
     public static void main(String args[]) throws Exception {
+        SpringApplication.run(CountApp.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
         AdditionCount additionCount = CountFactory.createAdditionCount(10);
         SubtractionCount subtractionCount = CountFactory.createSubtractionCount(10);
         List<Equation> combinedEquations = new ArrayList<>();
@@ -25,7 +33,7 @@ public class CountApp {
         PdfFactory.generatePdf("count_10_addition.pdf", combinedEquations);
     }
 
-    private static void createPdf() throws Exception {
+    private void createPdf() throws Exception {
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream("iTextHelloWorld.pdf"));
 
@@ -53,7 +61,7 @@ public class CountApp {
         encryption();
     }
 
-    private static void addTableHeader(PdfPTable table) {
+    private void addTableHeader(PdfPTable table) {
         Stream.of("Column header 1", "Column header 2", "Column header 3")
                 .forEach(columnTitle -> {
                     PdfPCell header = new PdfPCell();
@@ -64,13 +72,13 @@ public class CountApp {
                 });
     }
 
-    private static void addRows(PdfPTable table) {
+    private void addRows(PdfPTable table) {
         table.addCell("row1, col1");
         table.addCell("row1, col2");
         table.addCell("row1, col3");
     }
 
-    private static void addCustomRows(PdfPTable table) throws URISyntaxException, BadElementException, IOException {
+    private void addCustomRows(PdfPTable table) throws URISyntaxException, BadElementException, IOException {
         Path path = Paths.get(ClassLoader.getSystemResource("count.png").toURI());
         Image img = Image.getInstance(path.toAbsolutePath().toString());
         img.scalePercent(10);
@@ -87,7 +95,7 @@ public class CountApp {
         table.addCell(verticalAlignCell);
     }
 
-    private static void encryption() throws IOException, DocumentException {
+    private void encryption() throws IOException, DocumentException {
         PdfReader pdfReader = new PdfReader("iTextHelloWorld.pdf");
         PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileOutputStream("encryptedPdf.pdf"));
 
