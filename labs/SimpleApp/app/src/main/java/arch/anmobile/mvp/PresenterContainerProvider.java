@@ -27,6 +27,10 @@ public class PresenterContainerProvider {
         return object.getClass().getCanonicalName();
     }
 
+    public static String getRegistryName(Object parent, Object object) {
+        return parent.getClass().getCanonicalName() + "-" + object.getClass().getCanonicalName();
+    }
+
     private PresenterContainer addPresenterContainer(LifecycleRegistry lifecycleRegistry) {
         PresenterContainer presenterContainer;
         if (!presenterContainerMap.containsKey(lifecycleRegistry.getRegistryName())) {

@@ -3,13 +3,16 @@ package com.yangchuanosaurus.eventapp.views;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.yangchuanosaurus.eventapp.R;
 import com.yangchuanosaurus.eventapp.contracts.EventListContract;
 import com.yangchuanosaurus.eventapp.presenters.EventListPresenter;
 
 import java.util.List;
 
 import arch.anmobile.mvp.ActivityMvp;
+import arch.anmobile.mvp.FragmentMvp;
 import repository.app.data.Event;
 
 import static arch.anmobile.framework.AnFramework.storyEditor;
@@ -28,8 +31,17 @@ public class EventListActivity extends AppCompatActivity implements EventListCon
 
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_main);
+
         storyEditor().write(EventListActivity.class, "EventListContract.Presenter#loadEventList()");
         mPresenter.loadEventList();
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fragment_container, FragmentMvp.createInstance(this,
+                EventOwnerFragment.class, "top.owner"));
+        ft.add(R.id.fragment_container_down, FragmentMvp.createInstance(this,
+                EventOwnerFragment.class, "bottom.owner"));
+        ft.commit();
     }
 
     @Override

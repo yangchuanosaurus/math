@@ -34,13 +34,17 @@ public class EventListPresenter extends Presenter<EventListContract.View>
             @Override
             public void onCallback(List<Event> results) {
                 storyEditor().write(EventListPresenter.class, "onCallback(List<Event>)");
-                getView().renderEventList(results);
+                if (isViewSafe()) {
+                    getView().renderEventList(results);
+                }
             }
 
             @Override
             public void onError(String error) {
                 storyEditor().write(EventListPresenter.class, "onError(String)");
-                getView().renderError(error);
+                if (isViewSafe()) {
+                    getView().renderError(error);
+                }
             }
         });
     }
