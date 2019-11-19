@@ -14,8 +14,8 @@ public class SubtractionCount {
     }
 
     private void generate() {
-        for (int i = maxCount; i >= 0; i--) {
-            for (int j = 0; j <= i; j++) {
+        for (int i = maxCount; i > 0; i--) {
+            for (int j = 1; j <= i; j++) {
                 equationList.add(new Equation(i, j, Equation.Style.Subtraction));
             }
         }

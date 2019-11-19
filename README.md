@@ -2,6 +2,10 @@
 
 I want to create a math courseware for my children.
 
+Nov 14, 2019
+I decide to using phaser game engine build the counting games.
+http://phaser.io/tutorials/getting-started-phaser3
+
 Nov 12, 2019
 I decide to learn Spring boot for the coursewave.
 

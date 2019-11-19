@@ -14,8 +14,8 @@ public class AdditionCount {
     }
 
     private void generate() {
-        for (int i = 0; i < maxCount; i++) {
-            for (int j = maxCount - i; j >= 0; j--) {
+        for (int i = 1; i < maxCount; i++) {
+            for (int j = maxCount - i; j > 0; j--) {
                 equationList.add(new Equation(i, j, Equation.Style.Addition));
             }
         }
