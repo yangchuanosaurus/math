@@ -65,3 +65,35 @@ I want a page showing the event list, some features need support
           |- EventDataSource.java
 
 ## Code Generation
+
+# Components Solution
+CTMediator
+  openUrl, params
+  parseUrl, parse params
+  perform, target.action(params) of openUrl
+Runtime
+  create instance of target
+  perform action with params
+
+Question:
+- 1. How to manage the instances of target?
+- 2. What's the component? Only a concept intheory？
+  - 2.1 Everything is component?
+  - 2.2 Everything could has action?
+  - 2.3 I agree about no model in component
+
+# Model Solution
+What should we want?
+- Create App project. (No features here)
+- Create a new feature
+  - create couple of views
+  - create models related (*how to modeless?*)
+  - create classes related get/save models
+  - connect classes with views and models
+  - add the feature to the app (how to add to app?)
+- Create another feature
+  - create couple of views
+  - create models related (*how to modeless?*), but if the model related to other features, we should upgrade the model cross features
+  - create classes related get/save models, but if the classes related to other features?
+  - connect classes with views and models
+  - add the feature to the app (how to add to app?)

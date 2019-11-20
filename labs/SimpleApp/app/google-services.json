@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "856928103847",
+    "firebase_url": "https://simpleapp-3f3d0.firebaseio.com",
+    "project_id": "simpleapp-3f3d0",
+    "storage_bucket": "simpleapp-3f3d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:856928103847:android:30afda5902e144f91b1a82",
+        "android_client_info": {
+          "package_name": "com.yangchuanosaurus.eventapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "856928103847-aghr1l44ds4kbd53r6og1qs5o8gnq38f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yangchuanosaurus.eventapp",
+            "certificate_hash": "3d0d67447288883a796e1433c7dcb838a9e60102"
+          }
+        },
+        {
+          "client_id": "856928103847-qu7ftapsibuh1bne9dtmrsk0uu36if0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiQvdEUwysu9JGybBSr3FKfu05Sw_v9u8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "856928103847-qu7ftapsibuh1bne9dtmrsk0uu36if0s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
