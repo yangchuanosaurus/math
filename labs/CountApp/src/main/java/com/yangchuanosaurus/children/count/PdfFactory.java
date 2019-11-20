@@ -22,12 +22,12 @@ public class PdfFactory {
 
         document.open();
 
-        Paragraph paraHeader = new Paragraph();
-        Font headerFont = FontFactory.getFont(FontFactory.COURIER, 20, BaseColor.BLACK);
-        Chunk headerChunk = new Chunk("Count Exercises", headerFont);
-        paraHeader.add(headerChunk);
-        paraHeader.setAlignment(Element.ALIGN_CENTER);
-        document.add(paraHeader);
+//        Paragraph paraHeader = new Paragraph();
+//        Font headerFont = FontFactory.getFont(FontFactory.COURIER, 20, BaseColor.BLACK);
+//        Chunk headerChunk = new Chunk("Count Exercises", headerFont);
+//        paraHeader.add(headerChunk);
+//        paraHeader.setAlignment(Element.ALIGN_CENTER);
+//        document.add(paraHeader);
 
         int equationSize = equationList.size();
         Font font = FontFactory.getFont(FontFactory.COURIER, 14, BaseColor.BLACK);
@@ -42,7 +42,7 @@ public class PdfFactory {
         Collections.shuffle(equationList, new Random(seed));
 
         // Insert Table
-        PdfPTable table = new PdfPTable(4);
+        PdfPTable table = new PdfPTable(3);
         addRows(table, equationList);
         PdfDiv tableDiv = new PdfDiv();
         tableDiv.addElement(table);
@@ -58,7 +58,7 @@ public class PdfFactory {
     }
 
     private static void addRows(PdfPTable table, List<Equation> equationList) {
-        Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+        Font font = FontFactory.getFont(FontFactory.COURIER, 18, BaseColor.BLACK);
         for (int i = 0; i < equationList.size(); i++) {
             Equation equation = equationList.get(i);
 //            table.addCell(equation.toString());
