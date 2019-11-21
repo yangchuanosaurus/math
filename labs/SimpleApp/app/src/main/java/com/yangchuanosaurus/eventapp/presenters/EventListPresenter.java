@@ -64,7 +64,9 @@ public class EventListPresenter extends Presenter<EventListContract.View>
      * */
     @Override
     protected void onDestroy() {
-        eventRepository.cancelGetEventList();
+        if (null != eventRepository) {
+            eventRepository.cancelGetEventList();
+        }
         storyEditor().write(EventListPresenter.class, "onDestroy()");
     }
 }
