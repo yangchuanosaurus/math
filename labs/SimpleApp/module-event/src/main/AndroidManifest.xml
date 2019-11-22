@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="module.event">
+
+    <application android:theme="@style/AppTheme">
+
+        <activity android:name=".view.EventListActivity" android:screenOrientation="portrait"
+            android:launchMode="singleInstance" />
+
+        <activity android:name=".view.EventHomeActivity" android:screenOrientation="portrait"
+            android:launchMode="singleInstance" />
+
+    </application>
+
+</manifest>

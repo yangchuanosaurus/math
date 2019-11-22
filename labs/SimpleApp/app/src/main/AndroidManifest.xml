@@ -19,12 +19,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".views.EventListActivity"
-            android:screenOrientation="portrait" android:launchMode="singleInstance"/>
-
-        <activity android:name=".views.EventHomeActivity"
-            android:screenOrientation="portrait" android:launchMode="singleInstance"/>
-
         <!-- Firebase Messaging -->
         <service android:name=".messaging.AppFirebaseMessagingService" android:exported="false">
             <intent-filter>

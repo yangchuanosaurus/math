@@ -6,7 +6,8 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.yangchuanosaurus.eventapp.R;
-import com.yangchuanosaurus.eventapp.messaging.Messaging;
+
+import module.event.view.EventListActivity;
 
 /**
  * Created by Albert Zhao on 2019-11-20.
@@ -20,7 +21,6 @@ public class SplashActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        Messaging.enableFcm();
         new Handler().postDelayed(this::actionOfSplash, DELAY);
     }
 

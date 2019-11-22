@@ -1,2 +1,2 @@
-include ':app', ':anmobile-annotations', ':anmobile-annotation-processor', ':foundation', ':feature1'
+include ':app', ':anmobile-annotations', ':anmobile-annotation-processor', ':foundation', ':module-event', ':module-user', ':resource', ':func-messaging', ':module-main'
 rootProject.name='SimpleApp'
