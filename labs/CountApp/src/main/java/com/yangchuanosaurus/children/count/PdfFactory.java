@@ -1,5 +1,6 @@
 package com.yangchuanosaurus.children.count;
 
+import com.itextpdf.layout.property.VerticalAlignment;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfDiv;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -64,7 +65,7 @@ public class PdfFactory {
 //            table.addCell(equation.toString());
             Phrase phrase = new Phrase(equation.toString(), font);
             PdfPCell cell = new PdfPCell(phrase);
-            cell.setVerticalAlignment(Element.ALIGN_CENTER);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             table.addCell(cell);
         }
     }
