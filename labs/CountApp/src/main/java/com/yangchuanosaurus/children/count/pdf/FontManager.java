@@ -45,4 +45,14 @@ public class FontManager {
 
         return null;
     }
+
+    public PdfFont getFont(String fontPath) {
+        try {
+            return PdfFontFactory.createFont(fontPath, PdfEncodings.IDENTITY_H, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
