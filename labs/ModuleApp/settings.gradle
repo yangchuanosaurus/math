@@ -1,0 +1,11 @@
+include ':app'
+
+// Modules
+include ':app-modules:module-auth'
+include ':app-modules:module-pagination'
+
+// Module Apps
+include ':module-apps:module-auth-app'
+include ':module-apps:module-pagination-app'
+
+rootProject.name='ModuleApp'

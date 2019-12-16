@@ -1,0 +1,74 @@
+if (isModuleApp.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId 'com.yangchuanosaurus.moduleapp'
+                artifactId 'module-event'
+                version '1.0.0'
+            }
+        }
+    }
+
+    uploadArchives {
+        repositories.mavenDeployer {
+            def properties = new Properties()
+            def inputStream = project.rootProject.file('local.properties').newDataInputStream()
+            properties.load( inputStream )
+            def mvn_local_dir = properties.getProperty('mvn_local_dir')
+
+            pom.version = '1.0.0'
+            pom.artifactId = 'module-event'
+            pom.groupId = 'com.yangchuanosaurus.moduleapp'
+            repository(url: "$mvn_local_dir")
+        }
+    }
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        if (isModuleApp.toBoolean()) {
+            applicationId "modulesapp.module.event"
+        }
+
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            if (isModuleApp.toBoolean()) {
+                manifest.srcFile 'src/main/AndroidManifest_ModuleApp.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}

@@ -9,7 +9,7 @@ import com.itextpdf.layout.element.Paragraph;
 
 public class PdfSpellStandard {
 
-    private static final String FONT_FANG_ZHENG_PY = "./src/main/resources/FangZhengKaiTiPinYinZiKu-1.ttc";
+    private static final String FONT_PY = "./src/main/resources/Pinyinok.ttf";
     static final String DEST = "./standard_spell.pdf";
 
     public static void main(String[] args) throws Exception {
@@ -22,8 +22,8 @@ public class PdfSpellStandard {
         PdfDocument pdfDoc = new PdfDocument(new PdfWriter(dest));
         Document doc = new Document(pdfDoc, pageSize);
 
-        PdfFont fzFont = FontManager.getDefault().getFont(FONT_FANG_ZHENG_PY);
-        Paragraph samplePara = new Paragraph("a b c d")
+        PdfFont fzFont = FontManager.getDefault().getFont(FONT_PY);
+        Paragraph samplePara = new Paragraph("` 1 2 3 4 5 6 7 8 9 0 - = ~ ! @ # $ % ^ & * ( ) _ + [ ] { } \\ | ; ' : , . / < > ?")
                 .setFont(fzFont)
                 .setFontSize(26);
         doc.add(samplePara);

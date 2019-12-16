@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ModuleApp</string>
+    <string name="title_module_auth">module-auth</string>
+</resources>
