@@ -18,8 +18,8 @@ public abstract class PaginationAdapter<E, VH extends RecyclerView.ViewHolder> e
         mPagination.loadNextPage(createOnPaginationListener());
     }
 
-    private Pagination.OnPaginationListener createOnPaginationListener() {
-        return new Pagination.OnPaginationListener() {
+    private Pagination.PaginationListener createOnPaginationListener() {
+        return new Pagination.PaginationListener() {
             @Override
             public void onPageLoad(int page, int start, int count) {
                 onPaginationLoaded(page, start, count);

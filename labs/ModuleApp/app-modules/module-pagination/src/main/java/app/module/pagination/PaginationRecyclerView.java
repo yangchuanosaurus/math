@@ -23,7 +23,7 @@ public class PaginationRecyclerView extends RecyclerView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setPagination(Pagination pagination) {
+    public void setPagination(@NonNull Pagination pagination) {
         mPagination = pagination;
     }
 }

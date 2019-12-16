@@ -48,8 +48,8 @@ public class Pagination<T> {
      * @param page number
      * @param listener of page loaded
      * */
-    private void loadPage(int page, final OnPaginationListener listener) {
-        final OnPaginationListener onPaginationListener = listener;
+    private void loadPage(int page, final PaginationListener listener) {
+        final PaginationListener onPaginationListener = listener;
 
         mLoading = true;
         mPaginationLoader.loadPage(page, new PaginationLoader.PaginationLoaderListener<T>() {
@@ -69,7 +69,7 @@ public class Pagination<T> {
      * reload entities of page start (first page)
      * @param listener of the first page loaded
      * */
-    void reload(OnPaginationListener listener) {
+    void reload(PaginationListener listener) {
         mPage = mPageStart - 1;
         mHasMore = true;
         mEntities = new ArrayList<>();
@@ -80,12 +80,12 @@ public class Pagination<T> {
      * load entities of next page
      * @param listener of the next page loaded
      * */
-    void loadNextPage(OnPaginationListener listener) {
+    void loadNextPage(PaginationListener listener) {
         int nextPage = mPage + 1;
         loadPage(nextPage, listener);
     }
 
-    private void addPage(int page, List<T> entities, OnPaginationListener listener) {
+    private void addPage(int page, List<T> entities, PaginationListener listener) {
         int insertEntitiesAtStart = mEntities.size();
         int insertEntitiesCount = entities.size();
         mLoading = false;
@@ -97,7 +97,7 @@ public class Pagination<T> {
         }
     }
 
-    private void addPageFailed(int page, OnPaginationListener listener) {
+    private void addPageFailed(int page, PaginationListener listener) {
         mLoading = false;
         mHasMore = true;
         if (null != listener) {
@@ -105,7 +105,7 @@ public class Pagination<T> {
         }
     }
 
-    interface OnPaginationListener {
+    interface PaginationListener {
         void onPageLoad(int page, int start, int count);
         void onPageFailed(int page);
     }
