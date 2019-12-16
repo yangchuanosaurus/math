@@ -1,5 +1,5 @@
 package app.module.pagination;
 
-public interface PaginationListener {
+public interface PaginationTrackingListener {
     void onPagination(int page, boolean success, boolean retry);
 }

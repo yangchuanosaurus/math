@@ -15,6 +15,8 @@ public class Pagination<T> {
     private final PaginationLoader<T> mPaginationLoader;
     private boolean mLoading;
 
+    private List<PaginationTrackingListener> mTrackingListeners;
+
     public Pagination(int pageSize, int pageStart, @NonNull PaginationLoader<T> paginationLoader) {
         mPageSize = pageSize;
         mPageStart = pageStart;
@@ -23,8 +25,19 @@ public class Pagination<T> {
         mLoading = false;
 
         mEntities = new ArrayList<>();
+        mTrackingListeners = new ArrayList<>();
 
         mPaginationLoader = paginationLoader;
+    }
+
+    public void addTrackingListener(@NonNull PaginationTrackingListener listener) {
+        mTrackingListeners.add(listener);
+    }
+
+    public void removeTrackingListener(@NonNull PaginationTrackingListener listener) {
+        if (mTrackingListeners.contains(listener)) {
+            mTrackingListeners.remove(listener);
+        }
     }
 
     public int getCurrentPage() {
@@ -95,6 +108,9 @@ public class Pagination<T> {
         if (null != listener) {
             listener.onPageLoad(page, insertEntitiesAtStart, insertEntitiesCount);
         }
+        for (PaginationTrackingListener trackingListener : mTrackingListeners) {
+            trackingListener.onPagination(page, true, false);
+        }
     }
 
     private void addPageFailed(int page, PaginationListener listener) {
@@ -102,6 +118,9 @@ public class Pagination<T> {
         mHasMore = true;
         if (null != listener) {
             listener.onPageFailed(page);
+        }
+        for (PaginationTrackingListener trackingListener : mTrackingListeners) {
+            trackingListener.onPagination(page, false, true);
         }
     }
 
