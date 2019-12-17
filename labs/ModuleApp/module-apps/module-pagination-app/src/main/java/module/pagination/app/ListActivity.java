@@ -25,7 +25,7 @@ public class ListActivity {
     private Pagination<String> createPhotoListPagination() {
         int pageSize = 20;
         int pageStart = 0;
-        PaginationLoader<String> photoPaginationLoader = new PhotoPaginationLoader();
+        PaginationLoader<String> photoPaginationLoader = new PhotoPaginationLoader("");
 
         return new Pagination<>(pageSize, pageStart, photoPaginationLoader);
     }

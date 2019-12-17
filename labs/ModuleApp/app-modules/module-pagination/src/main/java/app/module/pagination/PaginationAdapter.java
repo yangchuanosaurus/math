@@ -44,6 +44,10 @@ public abstract class PaginationAdapter<E, VH extends RecyclerView.ViewHolder> e
         }
     }
 
+    protected E getItem(int position) {
+        return mPagination.getEntityAtPosition(position);
+    }
+
     @Override
     public int getItemCount() {
         return mPagination.getEntitiesCount();

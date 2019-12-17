@@ -4,8 +4,11 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import app.module.pagination.Pagination;
+import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
 
@@ -20,10 +23,13 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_list);
 
+        mPaginationRecyclerView = findViewById(R.id.recycler_view);
+
         // Create a PaginationLoader for biz loader
         PhotoPaginationLoader photoLoader = createPaginationLoader();
         // shared the pagination between activities/fragments
         mPhotoListPagination = createPhotoListPagination(photoLoader);
+        mPhotoListPagination.addTrackingListener(mPaginationRecyclerView);
 
         // Activity will tracking the pagination listener
         mPhotoListPagination.addTrackingListener(this);
@@ -32,6 +38,11 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
 
         // created recycler view adapter for load page
         mPhotoListAdapter = createPhotoListAdapter(mPhotoListPagination);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mPaginationRecyclerView.setLayoutManager(layoutManager);
+
+        mPaginationRecyclerView.setAdapter(mPhotoListAdapter);
 
         // reload the first page
         mPhotoListAdapter.reload();
@@ -42,6 +53,7 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mPhotoListPagination.removeTrackingListener(mPaginationRecyclerView);
         mPhotoListPagination.removeTrackingListener(this);
     }
 
@@ -51,7 +63,7 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
 
     private Pagination<String> createPhotoListPagination(PhotoPaginationLoader photoPaginationLoader) {
         int pageSize = 20;
-        int pageStart = 0;
+        int pageStart = PhotoPaginationLoader.MockPhotoDataSet.PAGE_START;
 
         return new Pagination<>(pageSize, pageStart, photoPaginationLoader);
     }
@@ -63,10 +75,18 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
     }
 
     @Override
-    public void onPagination(int page, boolean success, boolean retry) {
-        if (page == 0 && !success) {
-            // todo show error message and retry button
-        } else if (page > 0 && !success) {
+    public void onPagination(int page, int count, boolean success, boolean retry) {
+        PaginationLog.d("PhotoListActivity onPagination page="
+                + page + ", success=" + success + ", count=" + count);
+
+        boolean isStartPage = mPhotoListPagination.isStartPage(page);
+        if (isStartPage) {
+            if (success && count == 0) {
+                // todo show empty results
+            } else if (!success) {
+                // todo show error message and retry button
+            }
+        } else if (!success) {
             // todo adapter show load more failed and retry button inside
         }
     }

@@ -48,12 +48,16 @@ public class Pagination<T> {
         return mLoading;
     }
 
-    boolean isStartPage(int page) {
+    public boolean isStartPage(int page) {
         return page == mPageStart;
     }
 
     int getEntitiesCount() {
         return mEntities.size();
+    }
+
+    T getEntityAtPosition(int pos) {
+        return mEntities.get(pos);
     }
 
     /**
@@ -62,17 +66,20 @@ public class Pagination<T> {
      * @param listener of page loaded
      * */
     private void loadPage(int page, final PaginationListener listener) {
+        PaginationLog.d("Pagination loadPage " + page);
         final PaginationListener onPaginationListener = listener;
 
         mLoading = true;
-        mPaginationLoader.loadPage(page, new PaginationLoader.PaginationLoaderListener<T>() {
+        mPaginationLoader.loadPage(page, mPageSize, new PaginationLoader.PaginationLoaderListener<T>() {
             @Override
             public void onPageLoaded(int pageLoaded, List<T> entities) {
+                PaginationLog.d("Pagination onPageLoaded " + pageLoaded);
                 addPage(pageLoaded, entities, onPaginationListener);
             }
 
             @Override
             public void onPageLoadFailed(int pageLoaded) {
+                PaginationLog.d("Pagination onPageLoadFailed " + pageLoaded);
                 addPageFailed(pageLoaded, onPaginationListener);
             }
         });
@@ -83,6 +90,7 @@ public class Pagination<T> {
      * @param listener of the first page loaded
      * */
     void reload(PaginationListener listener) {
+        PaginationLog.d("Pagination reload");
         mPage = mPageStart - 1;
         mHasMore = true;
         mEntities = new ArrayList<>();
@@ -94,33 +102,49 @@ public class Pagination<T> {
      * @param listener of the next page loaded
      * */
     void loadNextPage(PaginationListener listener) {
+        PaginationLog.d("Pagination loadNextPage");
         int nextPage = mPage + 1;
         loadPage(nextPage, listener);
     }
 
     private void addPage(int page, List<T> entities, PaginationListener listener) {
-        int insertEntitiesAtStart = mEntities.size();
-        int insertEntitiesCount = entities.size();
-        mLoading = false;
-        mEntities.addAll(entities);
-        mPage = page;
-        mHasMore = entities.size() < mPageSize;
-        if (null != listener) {
-            listener.onPageLoad(page, insertEntitiesAtStart, insertEntitiesCount);
+        int insertEntitiesAtStart = 0;
+        int insertEntitiesCount = 0;
+
+        if (null == entities || entities.isEmpty()) {
+            mHasMore = false;
+        } else {
+            insertEntitiesAtStart = mEntities.size();
+            insertEntitiesCount = entities.size();
+            mLoading = false;
+            mEntities.addAll(entities);
+            mPage = page;
+
+            mHasMore = entities.size() == mPageSize;
         }
+
+        PaginationLog.d("Pagination addPage hasMore=" + mHasMore + ", at page=" + mPage);
+
+        if (null != listener) {
+            listener.onPageLoad(mPage, insertEntitiesAtStart, insertEntitiesCount);
+        }
+
         for (PaginationTrackingListener trackingListener : mTrackingListeners) {
-            trackingListener.onPagination(page, true, false);
+            trackingListener.onPagination(mPage, insertEntitiesCount, true, false);
         }
     }
 
     private void addPageFailed(int page, PaginationListener listener) {
         mLoading = false;
         mHasMore = true;
+
+        PaginationLog.d("Pagination addPageFailed (" + page + ") hasMore=" + mHasMore + ", at page=" + mPage);
+
         if (null != listener) {
             listener.onPageFailed(page);
         }
         for (PaginationTrackingListener trackingListener : mTrackingListeners) {
-            trackingListener.onPagination(page, false, true);
+            trackingListener.onPagination(page, 0, false, true);
         }
     }
 
