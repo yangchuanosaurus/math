@@ -1,4 +1,4 @@
-package app.module.pagination;
+package app.module.pagination.viewholders;
 
 @FunctionalInterface
 public interface ViewHolderBuilder<A, R> {

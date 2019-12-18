@@ -5,6 +5,9 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import app.module.pagination.viewholders.PaginationViewHolder;
+import app.module.pagination.viewholders.ViewHolderFactory;
+
 public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<PaginationViewHolder> {
 
     private Pagination<E> mPagination;
@@ -42,6 +45,23 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
         int count = mPagination.getEntitiesCount();
         if (mEnableLoadMore) count += 1;
         return count;
+    }
+
+    public int getItemLoadMoreViewType(int position) {
+        if (isLoadMoreEnabled()) {
+            if (position == getItemCount() - 1) {
+                if (isLoadMoreFailed()) {
+                    return ViewHolderFactory.LoadMoreRetryViewHolder.VIEW_TYPE;
+                } else {
+                    return ViewHolderFactory.LoadMoreViewHolder.VIEW_TYPE;
+                }
+            }
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    public boolean isLoadMoreViewType(int viewType) {
+        return viewType != Integer.MIN_VALUE;
     }
 
     // show the 'load more' view holder
