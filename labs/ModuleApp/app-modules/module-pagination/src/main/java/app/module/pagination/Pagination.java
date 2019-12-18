@@ -66,6 +66,9 @@ public class Pagination<T> {
      * @param listener of page loaded
      * */
     private void loadPage(int page, final PaginationListener listener) {
+        // Prompt call multi times via mLoading
+        if (mLoading) return;
+
         PaginationLog.d("Pagination loadPage " + page);
         final PaginationListener onPaginationListener = listener;
 
@@ -118,12 +121,14 @@ public class Pagination<T> {
         } else {
             insertEntitiesAtStart = mEntities.size();
             insertEntitiesCount = entities.size();
-            mLoading = false;
+
             mEntities.addAll(entities);
             mPage = page;
 
             mHasMore = entities.size() == mPageSize;
         }
+
+        mLoading = false;
 
         PaginationLog.d("Pagination addPage hasMore=" + mHasMore + ", at page=" + mPage);
 

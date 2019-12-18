@@ -56,7 +56,7 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
             PaginationLog.d("show the 'load more' view holder");
             if (!mEnableLoadMore) {
                 mEnableLoadMore = true;
-                view.post(new Runnable() {
+                postRunnable(view, new Runnable() {
                     @Override
                     public void run() {
                         notifyItemInserted(mPagination.getEntitiesCount());
@@ -70,7 +70,7 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
     void removeLoadMore(@NonNull View view) {
         PaginationLog.d("remove the 'load more' view holder");
         if (mEnableLoadMore) {
-            view.post(new Runnable() {
+            postRunnable(view, new Runnable() {
                 @Override
                 public void run() {
                     notifyItemRemoved(mPagination.getEntitiesCount());
@@ -79,6 +79,10 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
         }
         mEnableLoadMore = false;
 
+    }
+
+    protected void postRunnable(@NonNull View view, Runnable runnable) {
+        view.post(runnable);
     }
 
     protected boolean isLoadMoreEnabled() {

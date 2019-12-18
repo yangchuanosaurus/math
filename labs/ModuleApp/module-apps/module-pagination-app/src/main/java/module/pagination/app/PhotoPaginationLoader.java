@@ -39,6 +39,8 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
                         paginationLoaderListener.onPageLoaded(page, strings);
                     }
                 });
+
+//        paginationLoaderListener.onPageLoaded(page, mPhotoDataSet.getPage(page, pageSize));
     }
 
     public static class MockPhotoDataSet {
@@ -48,7 +50,7 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
 
         private MockPhotoDataSet() {
             mPhotoList = new ArrayList<>();
-            for (int i = 0; i < 40; i++) {
+            for (int i = 0; i < 101; i++) {
                 mPhotoList.add("Photo - " + (i + 1));
             }
         }
