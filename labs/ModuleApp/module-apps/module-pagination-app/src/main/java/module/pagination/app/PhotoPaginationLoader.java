@@ -36,7 +36,11 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
                 .subscribe(new Consumer<List<String>>() {
                     @Override
                     public void accept(List<String> strings) throws Exception {
-                        paginationLoaderListener.onPageLoaded(page, strings);
+                        if (page == -1) {
+                            paginationLoaderListener.onPageLoadFailed(page);
+                        } else {
+                            paginationLoaderListener.onPageLoaded(page, strings);
+                        }
                     }
                 });
 
@@ -50,7 +54,7 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
 
         private MockPhotoDataSet() {
             mPhotoList = new ArrayList<>();
-            for (int i = 0; i < 101; i++) {
+            for (int i = 0; i < 43; i++) {
                 mPhotoList.add("Photo - " + (i + 1));
             }
         }

@@ -1,10 +1,7 @@
 package app.module.pagination;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +11,7 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
     private Pagination.PaginationListener mPaginationListener;
 
     private boolean mEnableLoadMore;
+    private boolean mLoadMoreFailed;
 
     public PaginationAdapter(Pagination<E> pagination) {
         mPagination = pagination;
@@ -46,16 +44,13 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
         return count;
     }
 
-    protected View createView(@NonNull ViewGroup parent, @LayoutRes int layout) {
-        return LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
-    }
-
     // show the 'load more' view holder
     void addLoadMore(@NonNull View view) {
         if (mPagination.hasMoreData()) {
             PaginationLog.d("show the 'load more' view holder");
             if (!mEnableLoadMore) {
                 mEnableLoadMore = true;
+                mLoadMoreFailed = false;
                 postRunnable(view, new Runnable() {
                     @Override
                     public void run() {
@@ -66,10 +61,27 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
         }
     }
 
+    // remove the 'load more' view holder
+    void addLoadMoreRetry(@NonNull View view) {
+        mLoadMoreFailed = true;
+        if (mEnableLoadMore && mPagination.hasMoreData()) {
+            PaginationLog.d("show the 'load more retry' view holder");
+            postRunnable(view, new Runnable() {
+                @Override
+                public void run() {
+                    notifyItemChanged(mPagination.getEntitiesCount());
+                }
+            });
+        }
+    }
+
     // hide the 'load more' view holder
     void removeLoadMore(@NonNull View view) {
         PaginationLog.d("remove the 'load more' view holder");
+        mLoadMoreFailed = false;
         if (mEnableLoadMore) {
+            mEnableLoadMore = false;
+
             postRunnable(view, new Runnable() {
                 @Override
                 public void run() {
@@ -77,16 +89,18 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
                 }
             });
         }
-        mEnableLoadMore = false;
-
     }
 
-    protected void postRunnable(@NonNull View view, Runnable runnable) {
+    private void postRunnable(@NonNull View view, Runnable runnable) {
         view.post(runnable);
     }
 
     protected boolean isLoadMoreEnabled() {
         return mEnableLoadMore;
+    }
+
+    protected boolean isLoadMoreFailed() {
+        return mLoadMoreFailed;
     }
 
 }

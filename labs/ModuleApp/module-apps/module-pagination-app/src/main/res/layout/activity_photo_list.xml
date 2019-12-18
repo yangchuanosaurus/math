@@ -17,5 +17,8 @@
 <!--    <View-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="match_parent"/>-->
+    <include layout="@layout/view_failed_results" />
+    <include layout="@layout/view_photo_loading" />
+    <include layout="@layout/view_empty_results"/>
 
 </RelativeLayout>

@@ -69,6 +69,7 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
         super.setAdapter(adapter);
         mPaginationAdapter = adapter;
         mPagination = adapter.getPagination();
+        mPagination.addTrackingListener(this);
         adapter.setOnPaginationListener(createOnPaginationListener());
     }
 
@@ -112,8 +113,8 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
     }
 
     @Override
-    public void onPagination(int page, int count, boolean success, boolean retry) {
-        PaginationLog.d("PaginationRecyclerView onPagination page="
+    public void onPaginationLoaded(int page, int count, boolean success, boolean retry) {
+        PaginationLog.d("PaginationRecyclerView onPaginationLoaded page="
                 + page + ", success=" + success + ", count=" + count);
 
         boolean isStartPage = mPagination.isStartPage(page);
@@ -136,7 +137,8 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
             @Override
             public void onPageFailed(int page) {
                 // corresponding, remove the 'load more' view holder when load page finished
-                mPaginationAdapter.removeLoadMore(PaginationRecyclerView.this);
+                // add the 'load more retry' view holder
+                mPaginationAdapter.addLoadMoreRetry(PaginationRecyclerView.this);
                 onPageLoadFailed(page);
             }
         };

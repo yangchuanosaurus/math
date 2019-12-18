@@ -65,7 +65,7 @@ public class Pagination<T> {
      * @param page number
      * @param listener of page loaded
      * */
-    private void loadPage(int page, final PaginationListener listener) {
+    private void loadPage(int page, PaginationListener listener) {
         // Prompt call multi times via mLoading
         if (mLoading) return;
 
@@ -130,14 +130,18 @@ public class Pagination<T> {
 
         mLoading = false;
 
-        PaginationLog.d("Pagination addPage hasMore=" + mHasMore + ", at page=" + mPage);
+        PaginationLog.d("Pagination addPage hasMore=" + mHasMore + ", at page=" + page);
 
         if (null != listener) {
-            listener.onPageLoaded(mPage, insertEntitiesAtStart, insertEntitiesCount);
+            listener.onPageLoaded(page, insertEntitiesAtStart, insertEntitiesCount);
         }
 
+        notifyTrackingListeners(page, insertEntitiesCount, true);
+    }
+
+    private void notifyTrackingListeners(int page, final int insertEntitiesCount, boolean success) {
         for (PaginationTrackingListener trackingListener : mTrackingListeners) {
-            trackingListener.onPagination(mPage, insertEntitiesCount, true, false);
+            trackingListener.onPaginationLoaded(page, insertEntitiesCount, success, false);
         }
     }
 
@@ -150,9 +154,8 @@ public class Pagination<T> {
         if (null != listener) {
             listener.onPageFailed(page);
         }
-        for (PaginationTrackingListener trackingListener : mTrackingListeners) {
-            trackingListener.onPagination(page, 0, false, true);
-        }
+
+        notifyTrackingListeners(page, 0, false);
     }
 
     boolean hasMoreData() {
