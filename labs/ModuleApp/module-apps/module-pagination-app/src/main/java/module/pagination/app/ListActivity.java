@@ -13,9 +13,9 @@ public class ListActivity {
         // created recycler view adapter for load page
         PhotoListAdapter adapter = createPhotoListAdapter(photoListPagination);
         // reload the first page
-        adapter.reload();
+//        adapter.reload();
         // load the next page
-        adapter.loadNextPage();
+//        adapter.loadNextPage();
     }
 
     private PhotoListAdapter createPhotoListAdapter(@NonNull Pagination<String> pagination) {

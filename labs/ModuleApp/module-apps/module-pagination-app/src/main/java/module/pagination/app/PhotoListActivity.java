@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
@@ -15,7 +14,6 @@ import app.module.pagination.PaginationTrackingListener;
 public class PhotoListActivity extends AppCompatActivity implements PaginationTrackingListener {
 
     private PaginationRecyclerView mPaginationRecyclerView;
-    private PhotoListAdapter mPhotoListAdapter;
     private Pagination<String> mPhotoListPagination;
 
     @Override
@@ -24,8 +22,9 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
         setContentView(R.layout.activity_photo_list);
 
         mPaginationRecyclerView = findViewById(R.id.recycler_view);
+        mPaginationRecyclerView.setHasFixedSize(true);
 
-        // Create a PaginationLoader for biz loader
+        // Create a PaginationLoader for biz loader, apply biz part
         PhotoPaginationLoader photoLoader = createPaginationLoader();
         // shared the pagination between activities/fragments
         mPhotoListPagination = createPhotoListPagination(photoLoader);
@@ -33,21 +32,23 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
 
         // Activity will tracking the pagination listener
         mPhotoListPagination.addTrackingListener(this);
-        // todo does the RecyclerView needs know the Pagination?
-        mPaginationRecyclerView.setPagination(mPhotoListPagination);
 
         // created recycler view adapter for load page
-        mPhotoListAdapter = createPhotoListAdapter(mPhotoListPagination);
+        PhotoListAdapter photoListAdapter = createPhotoListAdapter(mPhotoListPagination);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mPaginationRecyclerView.setLayoutManager(layoutManager);
+        mPaginationRecyclerView.setLoadMoreListener(new PaginationRecyclerView.LoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                mPaginationRecyclerView.loadNextPage();
+            }
+        });
 
-        mPaginationRecyclerView.setAdapter(mPhotoListAdapter);
+        mPaginationRecyclerView.setAdapter(photoListAdapter);
 
         // reload the first page
-        mPhotoListAdapter.reload();
-
-        // scroll listener of recycler view will handle the load more behavior
+        mPaginationRecyclerView.reload();
     }
 
     @Override

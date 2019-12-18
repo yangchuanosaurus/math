@@ -1,47 +1,38 @@
 package app.module.pagination;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class PaginationAdapter<E, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<PaginationViewHolder> {
 
     private Pagination<E> mPagination;
+    private Pagination.PaginationListener mPaginationListener;
+
+    private boolean mEnableLoadMore;
 
     public PaginationAdapter(Pagination<E> pagination) {
         mPagination = pagination;
     }
 
-    public void reload() {
-        mPagination.reload(createOnPaginationListener());
+    void reload() {
+        mPagination.reload(mPaginationListener);
     }
 
-    public void loadNextPage() {
-        mPagination.loadNextPage(createOnPaginationListener());
+    void loadNextPage() {
+        mPagination.loadNextPage(mPaginationListener);
     }
 
-    private Pagination.PaginationListener createOnPaginationListener() {
-        return new Pagination.PaginationListener() {
-            @Override
-            public void onPageLoad(int page, int start, int count) {
-                onPaginationLoaded(page, start, count);
-            }
-
-            @Override
-            public void onPageFailed(int page) {
-                onPageLoadFailed(page);
-            }
-        };
+    void setOnPaginationListener(Pagination.PaginationListener listener) {
+        mPaginationListener = listener;
     }
 
-    private void onPaginationLoaded(int page, int start, int count) {
-        notifyItemRangeInserted(start, count);
-    }
-
-    private void onPageLoadFailed(int page) {
-        if (mPagination.isStartPage(page)) {
-            // todo the first page load failed
-        } else {
-            // todo the other pages load failed
-        }
+    Pagination<E> getPagination() {
+        return mPagination;
     }
 
     protected E getItem(int position) {
@@ -50,7 +41,48 @@ public abstract class PaginationAdapter<E, VH extends RecyclerView.ViewHolder> e
 
     @Override
     public int getItemCount() {
-        return mPagination.getEntitiesCount();
+        int count = mPagination.getEntitiesCount();
+        if (mEnableLoadMore) count += 1;
+        return count;
+    }
+
+    protected View createView(@NonNull ViewGroup parent, @LayoutRes int layout) {
+        return LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
+    }
+
+    // show the 'load more' view holder
+    void addLoadMore(@NonNull View view) {
+        if (mPagination.hasMoreData()) {
+            PaginationLog.d("show the 'load more' view holder");
+            if (!mEnableLoadMore) {
+                mEnableLoadMore = true;
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyItemInserted(mPagination.getEntitiesCount());
+                    }
+                });
+            }
+        }
+    }
+
+    // hide the 'load more' view holder
+    void removeLoadMore(@NonNull View view) {
+        PaginationLog.d("remove the 'load more' view holder");
+        if (mEnableLoadMore) {
+            view.post(new Runnable() {
+                @Override
+                public void run() {
+                    notifyItemRemoved(mPagination.getEntitiesCount());
+                }
+            });
+        }
+        mEnableLoadMore = false;
+
+    }
+
+    protected boolean isLoadMoreEnabled() {
+        return mEnableLoadMore;
     }
 
 }

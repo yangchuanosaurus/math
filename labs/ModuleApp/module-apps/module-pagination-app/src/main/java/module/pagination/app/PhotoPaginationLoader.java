@@ -2,8 +2,13 @@ package module.pagination.app;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import app.module.pagination.PaginationLoader;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class PhotoPaginationLoader implements PaginationLoader<String> {
     private String mEventId;
@@ -16,9 +21,24 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
     }
 
     @Override
-    public void loadPage(int page, int pageSize, PaginationLoaderListener<String> paginationLoaderListener) {
-        List<String> list = mPhotoDataSet.getPage(page, pageSize);
-        paginationLoaderListener.onPageLoaded(page, list);
+    public void loadPage(final int page, final int pageSize,
+                         final PaginationLoaderListener<String> paginationLoaderListener) {
+        Observable.fromCallable(new Callable<List<String>>() {
+            @Override
+            public List<String> call() throws Exception {
+                Thread.sleep(2000);
+                List<String> strings = mPhotoDataSet.getPage(page, pageSize);
+                return strings == null ? new ArrayList<String>() : strings;
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<String>>() {
+                    @Override
+                    public void accept(List<String> strings) throws Exception {
+                        paginationLoaderListener.onPageLoaded(page, strings);
+                    }
+                });
     }
 
     public static class MockPhotoDataSet {
@@ -28,9 +48,9 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
 
         private MockPhotoDataSet() {
             mPhotoList = new ArrayList<>();
-//            for (int i = 0; i < 28; i++) {
-//                mPhotoList.add("Photo - " + (i + 1));
-//            }
+            for (int i = 0; i < 40; i++) {
+                mPhotoList.add("Photo - " + (i + 1));
+            }
         }
 
         List<String> getPage(int page, int pageSize) {

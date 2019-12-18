@@ -102,9 +102,11 @@ public class Pagination<T> {
      * @param listener of the next page loaded
      * */
     void loadNextPage(PaginationListener listener) {
-        PaginationLog.d("Pagination loadNextPage");
-        int nextPage = mPage + 1;
-        loadPage(nextPage, listener);
+        if (mHasMore) {
+            PaginationLog.d("Pagination loadNextPage");
+            int nextPage = mPage + 1;
+            loadPage(nextPage, listener);
+        }
     }
 
     private void addPage(int page, List<T> entities, PaginationListener listener) {
@@ -126,7 +128,7 @@ public class Pagination<T> {
         PaginationLog.d("Pagination addPage hasMore=" + mHasMore + ", at page=" + mPage);
 
         if (null != listener) {
-            listener.onPageLoad(mPage, insertEntitiesAtStart, insertEntitiesCount);
+            listener.onPageLoaded(mPage, insertEntitiesAtStart, insertEntitiesCount);
         }
 
         for (PaginationTrackingListener trackingListener : mTrackingListeners) {
@@ -148,8 +150,12 @@ public class Pagination<T> {
         }
     }
 
+    boolean hasMoreData() {
+        return mHasMore;
+    }
+
     interface PaginationListener {
-        void onPageLoad(int page, int start, int count);
+        void onPageLoaded(int page, int start, int count);
         void onPageFailed(int page);
     }
 }
