@@ -35,17 +35,7 @@ public class Pagination<T> {
     }
 
     public void removeTrackingListener(@NonNull PaginationTrackingListener listener) {
-        if (mTrackingListeners.contains(listener)) {
-            mTrackingListeners.remove(listener);
-        }
-    }
-
-    public int getCurrentPage() {
-        return mPage;
-    }
-
-    public boolean isLoading() {
-        return mLoading;
+        mTrackingListeners.remove(listener);
     }
 
     public boolean isStartPage(int page) {
@@ -149,7 +139,7 @@ public class Pagination<T> {
         mLoading = false;
         mHasMore = true;
 
-        PaginationLog.d("Pagination addPageFailed (" + page + ") hasMore=" + mHasMore + ", at page=" + mPage);
+        PaginationLog.d("Pagination load " + page + " failed from page=" + mPage);
 
         if (null != listener) {
             listener.onPageFailed(page);

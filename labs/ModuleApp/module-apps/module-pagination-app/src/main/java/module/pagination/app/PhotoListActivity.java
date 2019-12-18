@@ -43,12 +43,7 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mPaginationRecyclerView.setLayoutManager(layoutManager);
-        mPaginationRecyclerView.setLoadMoreListener(new PaginationRecyclerView.LoadMoreListener() {
-            @Override
-            public void onLoadMore() {
-                mPaginationRecyclerView.loadNextPage();
-            }
-        });
+        mPaginationRecyclerView.setLoadMoreListener(() -> mPaginationRecyclerView.loadNextPage());
 
         mPaginationRecyclerView.setAdapter(photoListAdapter);
 
@@ -114,11 +109,11 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
                 // show empty results
                 showEmptyResultsView(true);
             } else if (!success) {
-                // todo show error message and retry button
+                // show error message and retry button
                 showFailedResultsView(true);
             }
         } else if (!success) {
-            // todo adapter show load more failed and retry button inside
+            // PaginationRecyclerView has handled this error case
         }
     }
 }

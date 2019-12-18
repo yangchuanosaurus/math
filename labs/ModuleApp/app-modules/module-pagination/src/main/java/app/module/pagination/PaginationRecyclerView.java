@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+/**
+ * PaginationRecyclerView contains the
+ * injected {@link Pagination} and the biz {@link PaginationAdapter}
+ * */
 public class PaginationRecyclerView extends RecyclerView implements PaginationTrackingListener {
-
-    private Pagination mPagination;
 
     private LoadMoreListener mLoadMoreListener;
 
@@ -68,8 +70,8 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
     public void setAdapter(@NonNull PaginationAdapter adapter) {
         super.setAdapter(adapter);
         mPaginationAdapter = adapter;
-        mPagination = adapter.getPagination();
-        mPagination.addTrackingListener(this);
+        Pagination pagination = adapter.getPagination();
+        pagination.addTrackingListener(this);
         adapter.setOnPaginationListener(createOnPaginationListener());
     }
 
@@ -104,11 +106,11 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
     }
 
     private void onReachEndless(int page, int totalItemsCount) {
-        PaginationLog.d("onLoadMore page=" + page + ", totalItemsCount=" + totalItemsCount);
+        PaginationLog.d("onLoadMoreStart page=" + page + ", totalItemsCount=" + totalItemsCount);
         if (null != mLoadMoreListener) {
             // show the 'load more' view holder
             mPaginationAdapter.addLoadMore(this);
-            mLoadMoreListener.onLoadMore();
+            mLoadMoreListener.onLoadMoreStart();
         }
     }
 
@@ -116,13 +118,6 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
     public void onPaginationLoaded(int page, int count, boolean success, boolean retry) {
         PaginationLog.d("PaginationRecyclerView onPaginationLoaded page="
                 + page + ", success=" + success + ", count=" + count);
-
-        boolean isStartPage = mPagination.isStartPage(page);
-        if (!isStartPage) {
-            if (!success) {
-                // todo adapter show load more failed and retry button inside
-            }
-        }
     }
 
     private Pagination.PaginationListener createOnPaginationListener() {
@@ -131,20 +126,18 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
             public void onPageLoaded(int page, int start, int count) {
                 // corresponding, remove the 'load more' view holder when load page finished
                 mPaginationAdapter.removeLoadMore(PaginationRecyclerView.this);
-                onPaginationLoaded(page, start, count);
+                onPaginationLoaded(start, count);
             }
 
             @Override
             public void onPageFailed(int page) {
-                // corresponding, remove the 'load more' view holder when load page finished
-                // add the 'load more retry' view holder
+                // corresponding, replace the 'load more' view holder with the 'load more retry' view holder
                 mPaginationAdapter.addLoadMoreRetry(PaginationRecyclerView.this);
-                onPageLoadFailed(page);
             }
         };
     }
 
-    private void onPaginationLoaded(int page, final int start, final int count) {
+    private void onPaginationLoaded(final int start, final int count) {
         PaginationLog.d("onPaginationLoaded start=" + start + ", count=" + count);
         post(new Runnable() {
             @Override
@@ -154,15 +147,7 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
         });
     }
 
-    private void onPageLoadFailed(int page) {
-        if (mPagination.isStartPage(page)) {
-            // todo the first page load failed
-        } else {
-            // todo the other pages load failed
-        }
-    }
-
     public interface LoadMoreListener {
-        void onLoadMore();
+        void onLoadMoreStart();
     }
 }
