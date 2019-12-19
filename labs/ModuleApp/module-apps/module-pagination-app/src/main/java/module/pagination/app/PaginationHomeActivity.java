@@ -18,6 +18,10 @@ public class PaginationHomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pagination_home);
     }
 
+    public void onShowList(View view) {
+        showDemo(PaginationHomeActivity.class);
+    }
+
     public void onShowPaginationListDemo(View view) {
         showDemo(PhotoListActivity.class);
     }

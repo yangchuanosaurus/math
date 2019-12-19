@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import leakcanary.AppWatcher;
+
 /**
  * PaginationRecyclerView contains the
  * injected {@link Pagination} and the biz {@link PaginationAdapter}
@@ -17,40 +19,38 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 public class PaginationRecyclerView extends RecyclerView implements PaginationTrackingListener {
 
     private LoadMoreListener mLoadMoreListener;
+    private LoadMoreRetryListener mLoadMoreRetryListener; // Embed load more retry click behavior
 
     private PaginationAdapter mPaginationAdapter;
+    private EndlessRecyclerViewScrollListener mEndlessScrollListener;
 
     public PaginationRecyclerView(@NonNull Context context) {
-        super(context);
+        this(context, null);
     }
 
     public PaginationRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public PaginationRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
+        mLoadMoreRetryListener = () -> onActionLoadMoreRetry();
     }
 
     public void reload() {
         if (null != mPaginationAdapter) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    mPaginationAdapter.reload();
-                }
-            });
+            mEndlessScrollListener.resetState();
+            post(() -> mPaginationAdapter.reload());
         }
     }
 
     public void loadNextPage() {
         if (null != mPaginationAdapter) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    mPaginationAdapter.loadNextPage();
-                }
-            });
+            post(() -> mPaginationAdapter.loadNextPage());
         }
     }
 
@@ -60,9 +60,9 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
 
         if (null != layout) {
             // scroll listener of recycler view will handle the load more behavior
-            EndlessRecyclerViewScrollListener scrollListener = createScrollListener(layout);
-            if (null != scrollListener) {
-                addOnScrollListener(scrollListener);
+            mEndlessScrollListener = createScrollListener(layout);
+            if (null != mEndlessScrollListener) {
+                addOnScrollListener(mEndlessScrollListener);
             }
         }
     }
@@ -73,6 +73,10 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
         Pagination pagination = adapter.getPagination();
         pagination.addTrackingListener(this);
         adapter.setOnPaginationListener(createOnPaginationListener());
+
+        mPaginationAdapter.setLoadMoreRetryListener(mLoadMoreRetryListener);
+
+        AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationAdapter);
     }
 
     public void setLoadMoreListener(LoadMoreListener listener) {
@@ -107,11 +111,19 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
 
     private void onReachEndless(int page, int totalItemsCount) {
         PaginationLog.d("onLoadMoreStart page=" + page + ", totalItemsCount=" + totalItemsCount);
+        onActionLoadMoreRetry();
+    }
+
+    private void onActionLoadMoreRetry() {
         if (null != mLoadMoreListener) {
             // show the 'load more' view holder
             mPaginationAdapter.addLoadMore(this);
             mLoadMoreListener.onLoadMoreStart();
         }
+    }
+
+    public LoadMoreRetryListener getLoadMoreRetryListener() {
+        return mLoadMoreRetryListener;
     }
 
     @Override
@@ -149,5 +161,9 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
 
     public interface LoadMoreListener {
         void onLoadMoreStart();
+    }
+
+    public void onDestroy() {
+        ViewHolderFactory.release();
     }
 }

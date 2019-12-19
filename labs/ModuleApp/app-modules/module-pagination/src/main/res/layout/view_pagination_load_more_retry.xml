@@ -15,6 +15,7 @@
         android:textStyle="bold" />
 
     <Button
+        android:id="@id/pagination_load_more_retry"
         android:layout_marginLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

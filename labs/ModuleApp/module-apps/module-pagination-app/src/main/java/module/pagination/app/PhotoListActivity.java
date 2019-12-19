@@ -11,6 +11,8 @@ import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
+import leakcanary.AppWatcher;
+import leakcanary.ObjectWatcher;
 
 public class PhotoListActivity extends AppCompatActivity implements PaginationTrackingListener {
 
@@ -51,6 +53,16 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
         mPhotoListPagination.addTrackingListener(this);
 
         reloadPhotos();
+
+        AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationRecyclerView);
+        AppWatcher.INSTANCE.getObjectWatcher().watch(mPhotoListPagination);
+    }
+
+    @Override
+    public void onDestroy() {
+        mPaginationRecyclerView.onDestroy();
+        super.onDestroy();
+        PaginationLog.d("PhotoListActivity onDestroy");
     }
 
     // reload the first page

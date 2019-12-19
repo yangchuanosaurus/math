@@ -5,8 +5,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import app.module.pagination.viewholders.PaginationViewHolder;
-import app.module.pagination.viewholders.ViewHolderFactory;
+import leakcanary.AppWatcher;
 
 public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<PaginationViewHolder> {
 
@@ -16,8 +15,11 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
     private boolean mEnableLoadMore;
     private boolean mLoadMoreFailed;
 
+    private LoadMoreRetryListener mLoadMoreRetryListener;
+
     public PaginationAdapter(Pagination<E> pagination) {
         mPagination = pagination;
+        AppWatcher.INSTANCE.getObjectWatcher().watch(mPagination);
     }
 
     void reload() {
@@ -64,14 +66,28 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
         return viewType != Integer.MIN_VALUE;
     }
 
+    void setLoadMoreRetryListener(LoadMoreRetryListener listener) {
+        mLoadMoreRetryListener = listener;
+    }
+
+    public LoadMoreRetryListener getLoadMoreRetryListener() {
+        return mLoadMoreRetryListener;
+    }
+
     // show the 'load more' view holder
     void addLoadMore(@NonNull View view) {
         if (mPagination.hasMoreData()) {
             PaginationLog.d("show the 'load more' view holder");
             if (!mEnableLoadMore) {
                 mEnableLoadMore = true;
-                mLoadMoreFailed = false;
                 postRunnable(view, () -> notifyItemInserted(mPagination.getEntitiesCount()));
+            } else {
+                // load more -> failed -> load more retry -> load more
+                if (mLoadMoreFailed) {
+                    // if load more replace the retry, we should notify changed
+                    mLoadMoreFailed = false;
+                    postRunnable(view, () -> notifyItemChanged(mPagination.getEntitiesCount()));
+                }
             }
         }
     }
@@ -107,4 +123,7 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
         return mLoadMoreFailed;
     }
 
+    void destroy() {
+
+    }
 }

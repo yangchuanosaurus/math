@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 
 import app.module.pagination.Pagination;
 import app.module.pagination.PaginationAdapter;
-import app.module.pagination.viewholders.PaginationViewHolder;
-import app.module.pagination.viewholders.ViewHolderFactory;
+import app.module.pagination.PaginationViewHolder;
+import app.module.pagination.ViewHolderFactory;
 
 public class PhotoListAdapter extends PaginationAdapter<String> {
 
@@ -17,14 +17,14 @@ public class PhotoListAdapter extends PaginationAdapter<String> {
         super(pagination);
         // load more & load more retry have embed inside the ViewHolderFactory
         // register a customize entity view holder
-        ViewHolderFactory.register(PhotoViewHolder.VIEW_TYPE, R.layout.view_photo, PhotoViewHolder::new);
+        ViewHolderFactory.getDefault().register(PhotoViewHolder.VIEW_TYPE, R.layout.view_photo, PhotoViewHolder::new);
     }
 
     @NonNull
     @Override
     public PaginationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create ViewHolderFactory to manage multiple view holders
-        return ViewHolderFactory.create(viewType, parent);
+        return ViewHolderFactory.getDefault().create(this, viewType, parent);
     }
 
     @Override

@@ -12,6 +12,7 @@ import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
+import leakcanary.AppWatcher;
 
 /**
  * Created by Albert Zhao on 2019-12-19.
@@ -20,7 +21,7 @@ import app.module.pagination.PaginationTrackingListener;
 public class PhotoGridActivity extends AppCompatActivity implements PaginationTrackingListener {
 
     private PaginationRecyclerView mPaginationRecyclerView;
-    private Pagination<String> mPhotoListPagination;
+    private Pagination<String> mPhotoGridPagination;
 
     private View mViewEmptyResults;
     private View mViewLoadingPhotos;
@@ -44,10 +45,10 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
         // Create a PaginationLoader for biz loader, apply biz part
         PhotoPaginationLoader photoLoader = createPaginationLoader();
         // shared the pagination between activities/fragments
-        mPhotoListPagination = createPhotoListPagination(photoLoader);
+        mPhotoGridPagination = createPhotoListPagination(photoLoader);
 
         // created recycler view adapter for load page
-        PhotoGridAdapter photoGridAdapter = createPhotoGridAdapter(mPhotoListPagination);
+        PhotoGridAdapter photoGridAdapter = createPhotoGridAdapter(mPhotoGridPagination);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_COLUMN_COUNT, RecyclerView.VERTICAL, false);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -67,9 +68,20 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
         mPaginationRecyclerView.setAdapter(photoGridAdapter);
 
         // Activity will tracking the pagination listener
-        mPhotoListPagination.addTrackingListener(this);
+        mPhotoGridPagination.addTrackingListener(this);
 
         reloadPhotos();
+
+        AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationRecyclerView);
+        AppWatcher.INSTANCE.getObjectWatcher().watch(mPhotoGridPagination);
+    }
+
+    @Override
+    public void onDestroy() {
+        mPhotoGridPagination = null;
+        mPaginationRecyclerView.onDestroy();
+        super.onDestroy();
+        PaginationLog.d("PhotoGridActivity onDestroy");
     }
 
     // reload the first page
@@ -114,7 +126,7 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
                 + page + ", success=" + success + ", count=" + count);
 
         showLoadingView(false);
-        boolean isStartPage = mPhotoListPagination.isStartPage(page);
+        boolean isStartPage = mPhotoGridPagination.isStartPage(page);
         if (isStartPage) {
             if (success && count == 0) {
                 // show empty results

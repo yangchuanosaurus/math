@@ -10,8 +10,9 @@ import androidx.annotation.NonNull;
 
 import app.module.pagination.Pagination;
 import app.module.pagination.PaginationAdapter;
-import app.module.pagination.viewholders.PaginationViewHolder;
-import app.module.pagination.viewholders.ViewHolderFactory;
+import app.module.pagination.PaginationViewHolder;
+import app.module.pagination.ViewHolderFactory;
+import leakcanary.AppWatcher;
 
 /**
  * Created by Albert Zhao on 2019-12-19.
@@ -25,10 +26,13 @@ public class PhotoGridAdapter extends PaginationAdapter<String> {
         super(pagination);
         // load more & load more retry have embed inside the ViewHolderFactory
         // register a customize entity view holder
-        ViewHolderFactory.register(PhotoGridViewHolder.VIEW_TYPE, R.layout.view_photo, PhotoGridViewHolder::new);
+        ViewHolderFactory.getDefault()
+                .register(PhotoGridViewHolder.VIEW_TYPE, R.layout.view_photo, PhotoGridViewHolder::new);
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mGridSize = wm.getDefaultDisplay().getWidth() / columnCount;
+
+        AppWatcher.INSTANCE.getObjectWatcher().watch(ViewHolderFactory.getDefault());
     }
 
     @NonNull
@@ -36,9 +40,9 @@ public class PhotoGridAdapter extends PaginationAdapter<String> {
     public PaginationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create ViewHolderFactory to manage multiple view holders
         if (PhotoGridViewHolder.VIEW_TYPE == viewType) {
-            return ViewHolderFactory.createGrid(viewType, mGridSize, parent);
+            return ViewHolderFactory.getDefault().createGrid(viewType, mGridSize, parent);
         } else {
-            return ViewHolderFactory.create(viewType, parent);
+            return ViewHolderFactory.getDefault().create(this, viewType, parent);
         }
     }
 

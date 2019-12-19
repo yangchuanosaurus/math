@@ -26,7 +26,7 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
         Observable.fromCallable(new Callable<List<String>>() {
             @Override
             public List<String> call() throws Exception {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
                 List<String> strings = mPhotoDataSet.getPage(page, pageSize);
                 return strings == null ? new ArrayList<String>() : strings;
             }
@@ -36,7 +36,7 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
                 .subscribe(new Consumer<List<String>>() {
                     @Override
                     public void accept(List<String> strings) throws Exception {
-                        if (page == -1) {
+                        if (page == 0) {
                             paginationLoaderListener.onPageLoadFailed(page);
                         } else {
                             paginationLoaderListener.onPageLoaded(page, strings);
@@ -55,7 +55,7 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
 
         private MockPhotoDataSet() {
             mPhotoList = new ArrayList<>();
-            for (int i = 0; i < PAGE_SIZE * 2 + 1; i++) {
+            for (int i = 0; i < PAGE_SIZE * 20 + 1; i++) {
                 mPhotoList.add("Photo - " + (i + 1));
             }
         }
