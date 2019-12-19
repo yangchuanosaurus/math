@@ -75,8 +75,6 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
         adapter.setOnPaginationListener(createOnPaginationListener());
 
         mPaginationAdapter.setLoadMoreRetryListener(mLoadMoreRetryListener);
-
-        AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationAdapter);
     }
 
     public void setLoadMoreListener(LoadMoreListener listener) {
@@ -165,5 +163,7 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
 
     public void onDestroy() {
         ViewHolderFactory.release();
+        AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationAdapter);
+        AppWatcher.INSTANCE.getObjectWatcher().watch(this);
     }
 }

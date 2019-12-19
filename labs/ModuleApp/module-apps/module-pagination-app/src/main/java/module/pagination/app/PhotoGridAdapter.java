@@ -12,7 +12,6 @@ import app.module.pagination.Pagination;
 import app.module.pagination.PaginationAdapter;
 import app.module.pagination.PaginationViewHolder;
 import app.module.pagination.ViewHolderFactory;
-import leakcanary.AppWatcher;
 
 /**
  * Created by Albert Zhao on 2019-12-19.
@@ -31,8 +30,6 @@ public class PhotoGridAdapter extends PaginationAdapter<String> {
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mGridSize = wm.getDefaultDisplay().getWidth() / columnCount;
-
-        AppWatcher.INSTANCE.getObjectWatcher().watch(ViewHolderFactory.getDefault());
     }
 
     @NonNull

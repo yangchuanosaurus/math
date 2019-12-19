@@ -12,6 +12,7 @@ import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
+import app.module.pagination.ViewHolderFactory;
 import leakcanary.AppWatcher;
 
 /**
@@ -71,17 +72,18 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
         mPhotoGridPagination.addTrackingListener(this);
 
         reloadPhotos();
-
-        AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationRecyclerView);
-        AppWatcher.INSTANCE.getObjectWatcher().watch(mPhotoGridPagination);
     }
 
     @Override
     public void onDestroy() {
-        mPhotoGridPagination = null;
         mPaginationRecyclerView.onDestroy();
         super.onDestroy();
         PaginationLog.d("PhotoGridActivity onDestroy");
+
+        AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationRecyclerView);
+        AppWatcher.INSTANCE.getObjectWatcher().watch(mPhotoGridPagination);
+        AppWatcher.INSTANCE.getObjectWatcher().watch(this);
+        AppWatcher.INSTANCE.getObjectWatcher().watch(ViewHolderFactory.getDefault());
     }
 
     // reload the first page

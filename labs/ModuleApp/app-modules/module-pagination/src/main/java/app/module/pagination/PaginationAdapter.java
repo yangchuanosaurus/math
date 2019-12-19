@@ -122,8 +122,4 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
     protected boolean isLoadMoreFailed() {
         return mLoadMoreFailed;
     }
-
-    void destroy() {
-
-    }
 }
