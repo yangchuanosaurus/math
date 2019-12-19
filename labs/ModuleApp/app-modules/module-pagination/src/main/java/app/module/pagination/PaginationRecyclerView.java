@@ -139,12 +139,12 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
 
     private void onPaginationLoaded(final int start, final int count) {
         PaginationLog.d("onPaginationLoaded start=" + start + ", count=" + count);
-        post(new Runnable() {
-            @Override
-            public void run() {
-                mPaginationAdapter.notifyItemRangeInserted(start, count);
-            }
-        });
+        post(() -> mPaginationAdapter.notifyItemRangeInserted(start, count));
+    }
+
+    public boolean isLoadMorePosition(int position) {
+        return mPaginationAdapter.isLoadMoreEnabled()
+                && position == mPaginationAdapter.getItemCount() - 1;
     }
 
     public interface LoadMoreListener {

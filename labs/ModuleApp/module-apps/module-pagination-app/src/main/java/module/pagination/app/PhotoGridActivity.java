@@ -5,14 +5,19 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
 
-public class PhotoListActivity extends AppCompatActivity implements PaginationTrackingListener {
+/**
+ * Created by Albert Zhao on 2019-12-19.
+ * Copyright (c) 2019 Android Mobile ActiveNetwork. All rights reserved.
+ */
+public class PhotoGridActivity extends AppCompatActivity implements PaginationTrackingListener {
 
     private PaginationRecyclerView mPaginationRecyclerView;
     private Pagination<String> mPhotoListPagination;
@@ -20,6 +25,9 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
     private View mViewEmptyResults;
     private View mViewLoadingPhotos;
     private View mViewFailedResults;
+
+    private static final int GRID_COLUMN_COUNT = 3;
+    public static final int PAGE_SIZE = 25;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +47,24 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
         mPhotoListPagination = createPhotoListPagination(photoLoader);
 
         // created recycler view adapter for load page
-        PhotoListAdapter photoListAdapter = createPhotoListAdapter(mPhotoListPagination);
+        PhotoGridAdapter photoGridAdapter = createPhotoGridAdapter(mPhotoListPagination);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_COLUMN_COUNT, RecyclerView.VERTICAL, false);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (mPaginationRecyclerView.isLoadMorePosition(position)) {
+                    return GRID_COLUMN_COUNT;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
         mPaginationRecyclerView.setLayoutManager(layoutManager);
         mPaginationRecyclerView.setLoadMoreListener(() -> mPaginationRecyclerView.loadNextPage());
 
-        mPaginationRecyclerView.setAdapter(photoListAdapter);
+        mPaginationRecyclerView.setAdapter(photoGridAdapter);
 
         // Activity will tracking the pagination listener
         mPhotoListPagination.addTrackingListener(this);
@@ -61,15 +80,14 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
         showLoadingView(true);
     }
 
-    private PhotoListAdapter createPhotoListAdapter(@NonNull Pagination<String> pagination) {
-        return new PhotoListAdapter(pagination);
+    private PhotoGridAdapter createPhotoGridAdapter(@NonNull Pagination<String> pagination) {
+        return new PhotoGridAdapter(this, GRID_COLUMN_COUNT, pagination);
     }
 
     private Pagination<String> createPhotoListPagination(PhotoPaginationLoader photoPaginationLoader) {
-        int pageSize = 20;
         int pageStart = PhotoPaginationLoader.MockPhotoDataSet.PAGE_START;
 
-        return new Pagination<>(pageSize, pageStart, photoPaginationLoader);
+        return new Pagination<>(PAGE_SIZE, pageStart, photoPaginationLoader);
     }
 
     private PhotoPaginationLoader createPaginationLoader() {
@@ -109,4 +127,5 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
             // PaginationRecyclerView has handled this error case
         }
     }
+
 }

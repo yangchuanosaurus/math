@@ -71,12 +71,7 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
             if (!mEnableLoadMore) {
                 mEnableLoadMore = true;
                 mLoadMoreFailed = false;
-                postRunnable(view, new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyItemInserted(mPagination.getEntitiesCount());
-                    }
-                });
+                postRunnable(view, () -> notifyItemInserted(mPagination.getEntitiesCount()));
             }
         }
     }
@@ -86,12 +81,7 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
         mLoadMoreFailed = true;
         if (mEnableLoadMore && mPagination.hasMoreData()) {
             PaginationLog.d("show the 'load more retry' view holder");
-            postRunnable(view, new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemChanged(mPagination.getEntitiesCount());
-                }
-            });
+            postRunnable(view, () -> notifyItemChanged(mPagination.getEntitiesCount()));
         }
     }
 
@@ -101,13 +91,7 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
         mLoadMoreFailed = false;
         if (mEnableLoadMore) {
             mEnableLoadMore = false;
-
-            postRunnable(view, new Runnable() {
-                @Override
-                public void run() {
-                    notifyItemRemoved(mPagination.getEntitiesCount());
-                }
-            });
+            postRunnable(view, () -> notifyItemRemoved(mPagination.getEntitiesCount()));
         }
     }
 

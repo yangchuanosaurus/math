@@ -26,7 +26,7 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
         Observable.fromCallable(new Callable<List<String>>() {
             @Override
             public List<String> call() throws Exception {
-                Thread.sleep(2000);
+                Thread.sleep(5000);
                 List<String> strings = mPhotoDataSet.getPage(page, pageSize);
                 return strings == null ? new ArrayList<String>() : strings;
             }
@@ -50,11 +50,12 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
     public static class MockPhotoDataSet {
 
         public static final int PAGE_START = 1;
+        public static final int PAGE_SIZE = PhotoGridActivity.PAGE_SIZE;
         private List<String> mPhotoList;
 
         private MockPhotoDataSet() {
             mPhotoList = new ArrayList<>();
-            for (int i = 0; i < 43; i++) {
+            for (int i = 0; i < PAGE_SIZE * 2 + 1; i++) {
                 mPhotoList.add("Photo - " + (i + 1));
             }
         }

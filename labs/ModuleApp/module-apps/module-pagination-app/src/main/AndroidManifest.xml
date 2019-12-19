@@ -7,12 +7,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".PhotoListActivity" android:screenOrientation="portrait">
+        <activity android:name=".PaginationHomeActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".PhotoListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".PhotoGridActivity" android:screenOrientation="portrait" />
 
     </application>
 

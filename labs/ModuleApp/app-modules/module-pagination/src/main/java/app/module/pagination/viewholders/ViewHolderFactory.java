@@ -70,6 +70,14 @@ public class ViewHolderFactory {
         return mRegistry.get(viewType).create(view);
     }
 
+    @NonNull
+    public static PaginationViewHolder createGrid(int viewType, int measuredSize, @NonNull ViewGroup parent) {
+        int layout = mRegistryLayout.get(viewType);
+        View view = createView(parent, layout);
+        view.setLayoutParams(new ViewGroup.LayoutParams(measuredSize, measuredSize));
+        return mRegistry.get(viewType).create(view);
+    }
+
     private static View createView(@NonNull ViewGroup parent, @LayoutRes int layout) {
         return LayoutInflater.from(parent.getContext())
                 .inflate(layout, parent, false);
