@@ -52,6 +52,8 @@ public class PhotoListAdapter extends PaginationAdapter<String> {
         PhotoViewHolder(@NonNull View itemView) {
             super(VIEW_TYPE, itemView);
             mTvPhoto = itemView.findViewById(R.id.tv_photo);
+
+            itemView.setOnClickListener(v -> onItemActionClick(0));
         }
 
         void updatePhoto(String photo) {

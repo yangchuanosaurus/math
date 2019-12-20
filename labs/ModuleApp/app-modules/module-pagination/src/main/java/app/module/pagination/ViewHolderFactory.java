@@ -68,28 +68,32 @@ public class ViewHolderFactory {
                                           @NonNull ViewGroup parent) {
         if (LoadMoreRetryViewHolder.VIEW_TYPE == viewType) {
             // support load more retry
-            return createLoadMoreRetryViewHolder(
-                    adapter.getLoadMoreRetryListener(), viewType, parent);
+            return createLoadMoreRetryViewHolder(adapter, adapter.getLoadMoreRetryListener(), viewType, parent);
         } else {
-            return createLoadMoreRetryViewHolder(null, viewType, parent);
+            return createLoadMoreRetryViewHolder(adapter, null, viewType, parent);
         }
     }
 
     @NonNull
-    private PaginationViewHolder createLoadMoreRetryViewHolder(LoadMoreRetryListener listener,
+    private PaginationViewHolder createLoadMoreRetryViewHolder(PaginationAdapter adapter,
+                                                               LoadMoreRetryListener retryListener,
                                                                int viewType,
                                                                @NonNull ViewGroup parent) {
         int layout = mRegistryLayout.get(viewType);
         View view = createView(parent, layout);
-        if (null != listener) {
+        if (null != retryListener) {
             View retryView = view.findViewById(R.id.pagination_load_more_retry);
             if (null != retryView) {
                 retryView.setOnClickListener(v -> {
-                    listener.onLoadMoreRetry();
+                    retryListener.onLoadMoreRetry();
                 });
             }
         }
-        return mRegistry.get(viewType).create(view);
+
+        PaginationViewHolder paginationViewHolder = mRegistry.get(viewType).create(view);
+        bindViewHolderWithAdapter(paginationViewHolder, adapter);
+
+        return paginationViewHolder;
     }
 
     @NonNull
@@ -100,12 +104,18 @@ public class ViewHolderFactory {
         int layout = mRegistryLayout.get(viewType);
         View view = createView(parent, layout);
         view.setLayoutParams(new ViewGroup.LayoutParams(measuredSize, measuredSize));
-        PaginationViewHolder paginationViewHolder = mRegistry.get(viewType).create(view);
 
-        if (null != adapter.getItemClickListener()) {
-            paginationViewHolder.setItemClickListener(adapter.getItemClickListener());
-        }
+        PaginationViewHolder paginationViewHolder = mRegistry.get(viewType).create(view);
+        bindViewHolderWithAdapter(paginationViewHolder, adapter);
+
         return paginationViewHolder;
+    }
+
+    void bindViewHolderWithAdapter(PaginationViewHolder viewHolder, PaginationAdapter adapter) {
+        viewHolder.setPagination(adapter.getPagination());
+        if (null != adapter.getItemClickListener()) {
+            viewHolder.setItemClickListener(adapter.getItemClickListener());
+        }
     }
 
     private View createView(@NonNull ViewGroup parent, @LayoutRes int layout) {

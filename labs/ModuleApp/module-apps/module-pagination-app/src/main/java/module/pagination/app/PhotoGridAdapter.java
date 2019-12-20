@@ -60,26 +60,22 @@ public class PhotoGridAdapter extends PaginationAdapter<String> {
         return PhotoListAdapter.PhotoViewHolder.VIEW_TYPE;
     }
 
-    static class PhotoGridViewHolder extends PaginationViewHolder {
+    static class PhotoGridViewHolder extends PaginationViewHolder<String> {
         private TextView mTvPhoto;
         static final int VIEW_TYPE = 1;
-
-        private String mPhoto;
 
         PhotoGridViewHolder(@NonNull View itemView) {
             super(VIEW_TYPE, itemView);
             mTvPhoto = itemView.findViewById(R.id.tv_photo);
 
-            itemView.setOnClickListener(v -> onItemClick());
+            // have to setup which view could call the OnItemClickListener
+            // Sample, remove - removeViewClick caused onItemActionClick(mPhoto, ACTION_REMOVE)
+            // Sample, favorite - favoriteViewClick caused onItemActionClick(mPhoto, ACTION_FAVORITE)
+            itemView.setOnClickListener(v -> onItemActionClick(0));
         }
 
         void updatePhoto(String photo) {
-            mPhoto = photo;
             mTvPhoto.setText(photo);
-        }
-
-        private void onItemClick() {
-            getItemClickListener().onItemClick(mPhoto, 0);
         }
     }
 

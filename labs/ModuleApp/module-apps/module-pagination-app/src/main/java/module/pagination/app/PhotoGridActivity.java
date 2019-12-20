@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import app.module.pagination.ItemClickListener;
 import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
@@ -65,6 +66,12 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
 
         mPaginationRecyclerView.setLayoutManager(layoutManager);
         mPaginationRecyclerView.setLoadMoreListener(() -> mPaginationRecyclerView.loadNextPage());
+        mPaginationRecyclerView.setOnItemClickListener(new ItemClickListener<String>() {
+            @Override
+            public void onItemActionClick(String item, int actionId) {
+                PaginationLog.d("onItemActionClick " + item);
+            }
+        });
 
         mPaginationRecyclerView.setAdapter(photoGridAdapter);
 

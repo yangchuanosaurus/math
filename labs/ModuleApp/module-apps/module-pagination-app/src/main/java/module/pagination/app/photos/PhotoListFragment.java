@@ -42,10 +42,10 @@ public class PhotoListFragment extends Fragment implements PaginationTrackingLis
         mPaginationRecyclerView = view.findViewById(R.id.recycler_view);
         mPaginationRecyclerView.setHasFixedSize(true);
 
-        initPaginationRecyclerView(mPaginationRecyclerView);
+        initPaginationRecyclerView();
         mPaginationRecyclerView.setOnItemClickListener(new ItemClickListener<String>() {
             @Override
-            public void onItemClick(String item, int viewId) {
+            public void onItemActionClick(String item, int actionId) {
                 PaginationLog.d("On item clicked: " + item);
             }
         });
@@ -63,7 +63,7 @@ public class PhotoListFragment extends Fragment implements PaginationTrackingLis
         showLoadingView(true);
     }
 
-    private void initPaginationRecyclerView(PaginationRecyclerView recyclerView) {
+    private void initPaginationRecyclerView() {
         // Create a PaginationLoader for biz loader, apply biz part
         PhotoPaginationLoader photoLoader = createPaginationLoader();
         // shared the pagination between activities/fragments
@@ -85,10 +85,10 @@ public class PhotoListFragment extends Fragment implements PaginationTrackingLis
             }
         });
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setLoadMoreListener(() -> mPaginationRecyclerView.loadNextPage());
+        mPaginationRecyclerView.setLayoutManager(layoutManager);
+        mPaginationRecyclerView.setLoadMoreListener(() -> mPaginationRecyclerView.loadNextPage());
 
-        recyclerView.setAdapter(photoGridAdapter);
+        mPaginationRecyclerView.setAdapter(photoGridAdapter);
     }
 
     private PhotoGridAdapter createPhotoGridAdapter(@NonNull Pagination<String> pagination) {

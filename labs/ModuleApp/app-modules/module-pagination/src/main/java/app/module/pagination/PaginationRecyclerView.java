@@ -82,7 +82,7 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
         mLoadMoreListener = listener;
     }
 
-    public void setOnItemClickListener(ItemClickListener listener) {
+    public <T> void setOnItemClickListener(ItemClickListener<T> listener) {
         mItemClickListener = listener;
         bindAdapterWithItemListener();
     }
