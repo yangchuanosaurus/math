@@ -25,8 +25,7 @@ public class PhotoGridAdapter extends PaginationAdapter<String> {
         super(pagination);
         // load more & load more retry have embed inside the ViewHolderFactory
         // register a customize entity view holder
-        ViewHolderFactory.getDefault()
-                .register(PhotoGridViewHolder.VIEW_TYPE, R.layout.view_photo, PhotoGridViewHolder::new);
+        register(PhotoGridViewHolder.VIEW_TYPE, R.layout.view_photo, PhotoGridViewHolder::new);
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mGridSize = wm.getDefaultDisplay().getWidth() / columnCount;
@@ -35,11 +34,11 @@ public class PhotoGridAdapter extends PaginationAdapter<String> {
     @NonNull
     @Override
     public PaginationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // create ViewHolderFactory to manage multiple view holders
+        // createViewHolder ViewHolderFactory to manage multiple view holders
         if (PhotoGridViewHolder.VIEW_TYPE == viewType) {
-            return ViewHolderFactory.getDefault().createGrid(viewType, mGridSize, parent);
+            return createGridViewHolder(this, viewType, mGridSize, parent);
         } else {
-            return ViewHolderFactory.getDefault().create(this, viewType, parent);
+            return createViewHolder(this, viewType, parent);
         }
     }
 
@@ -65,13 +64,22 @@ public class PhotoGridAdapter extends PaginationAdapter<String> {
         private TextView mTvPhoto;
         static final int VIEW_TYPE = 1;
 
+        private String mPhoto;
+
         PhotoGridViewHolder(@NonNull View itemView) {
             super(VIEW_TYPE, itemView);
             mTvPhoto = itemView.findViewById(R.id.tv_photo);
+
+            itemView.setOnClickListener(v -> onItemClick());
         }
 
         void updatePhoto(String photo) {
+            mPhoto = photo;
             mTvPhoto.setText(photo);
+        }
+
+        private void onItemClick() {
+            getItemClickListener().onItemClick(mPhoto, 0);
         }
     }
 

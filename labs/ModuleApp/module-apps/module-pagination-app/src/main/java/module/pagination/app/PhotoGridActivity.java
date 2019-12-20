@@ -76,14 +76,12 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
 
     @Override
     public void onDestroy() {
-        mPaginationRecyclerView.onDestroy();
         super.onDestroy();
         PaginationLog.d("PhotoGridActivity onDestroy");
 
         AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationRecyclerView);
         AppWatcher.INSTANCE.getObjectWatcher().watch(mPhotoGridPagination);
         AppWatcher.INSTANCE.getObjectWatcher().watch(this);
-        AppWatcher.INSTANCE.getObjectWatcher().watch(ViewHolderFactory.getDefault());
     }
 
     // reload the first page

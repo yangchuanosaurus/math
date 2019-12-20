@@ -30,6 +30,10 @@ public class PaginationHomeActivity extends AppCompatActivity {
         showDemo(PhotoGridActivity.class);
     }
 
+    public void onShowSharedPaginationDemo(View view) {
+        showDemo(module.pagination.app.photos.PhotoListActivity.class);
+    }
+
     private void showDemo(Class clazz) {
         Intent intent = new Intent(this, clazz);
         startActivity(intent);

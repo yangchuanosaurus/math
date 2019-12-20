@@ -58,14 +58,12 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
 
     @Override
     public void onDestroy() {
-        mPaginationRecyclerView.onDestroy();
         super.onDestroy();
         PaginationLog.d("PhotoListActivity onDestroy");
 
         AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationRecyclerView);
         AppWatcher.INSTANCE.getObjectWatcher().watch(mPhotoListPagination);
         AppWatcher.INSTANCE.getObjectWatcher().watch(this);
-        AppWatcher.INSTANCE.getObjectWatcher().watch(ViewHolderFactory.getDefault());
     }
 
     // reload the first page

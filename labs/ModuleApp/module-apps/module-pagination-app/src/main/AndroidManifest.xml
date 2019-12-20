@@ -17,6 +17,8 @@
         <activity android:name=".PhotoListActivity" android:screenOrientation="portrait" />
         <activity android:name=".PhotoGridActivity" android:screenOrientation="portrait" />
 
+        <activity android:name=".photos.PhotoListActivity" android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

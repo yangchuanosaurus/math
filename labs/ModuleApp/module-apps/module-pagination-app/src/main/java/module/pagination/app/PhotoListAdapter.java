@@ -17,14 +17,14 @@ public class PhotoListAdapter extends PaginationAdapter<String> {
         super(pagination);
         // load more & load more retry have embed inside the ViewHolderFactory
         // register a customize entity view holder
-        ViewHolderFactory.getDefault().register(PhotoViewHolder.VIEW_TYPE, R.layout.view_photo, PhotoViewHolder::new);
+        register(PhotoViewHolder.VIEW_TYPE, R.layout.view_photo, PhotoViewHolder::new);
     }
 
     @NonNull
     @Override
     public PaginationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // create ViewHolderFactory to manage multiple view holders
-        return ViewHolderFactory.getDefault().create(this, viewType, parent);
+        // createViewHolder ViewHolderFactory to manage multiple view holders
+        return createViewHolder(this, viewType, parent);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package app.module.pagination;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,9 +17,13 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
     private boolean mLoadMoreFailed;
 
     private LoadMoreRetryListener mLoadMoreRetryListener;
+    private ItemClickListener mItemClickListener;
+
+    private ViewHolderFactory mViewHolderFactory;
 
     public PaginationAdapter(Pagination<E> pagination) {
         mPagination = pagination;
+        mViewHolderFactory = new ViewHolderFactory();
         AppWatcher.INSTANCE.getObjectWatcher().watch(mPagination);
     }
 
@@ -68,6 +73,14 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
 
     void setLoadMoreRetryListener(LoadMoreRetryListener listener) {
         mLoadMoreRetryListener = listener;
+    }
+
+    void setItemClickListener(ItemClickListener listener) {
+        mItemClickListener = listener;
+    }
+
+    ItemClickListener getItemClickListener() {
+        return mItemClickListener;
     }
 
     public LoadMoreRetryListener getLoadMoreRetryListener() {
@@ -121,5 +134,26 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
 
     protected boolean isLoadMoreFailed() {
         return mLoadMoreFailed;
+    }
+
+    public void register(int viewType,
+                         int layout,
+                         ViewHolderBuilder<View, PaginationViewHolder> viewHolderBuilder) {
+        mViewHolderFactory.register(viewType, layout, viewHolderBuilder);
+    }
+
+    @NonNull
+    public PaginationViewHolder createGridViewHolder(PaginationAdapter adapter,
+                                                     int viewType,
+                                                     int measuredSize,
+                                                     @NonNull ViewGroup parent) {
+        return mViewHolderFactory.createGridViewHolder(adapter, viewType, measuredSize, parent);
+    }
+
+    @NonNull
+    public PaginationViewHolder createViewHolder(PaginationAdapter adapter,
+                                                 int viewType,
+                                                 @NonNull ViewGroup parent) {
+        return mViewHolderFactory.createViewHolder(adapter, viewType, parent);
     }
 }

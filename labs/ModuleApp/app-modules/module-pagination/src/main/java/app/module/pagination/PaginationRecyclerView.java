@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import leakcanary.AppWatcher;
-
 /**
  * PaginationRecyclerView contains the
  * injected {@link Pagination} and the biz {@link PaginationAdapter}
@@ -23,6 +21,8 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
 
     private PaginationAdapter mPaginationAdapter;
     private EndlessRecyclerViewScrollListener mEndlessScrollListener;
+
+    private ItemClickListener mItemClickListener;
 
     public PaginationRecyclerView(@NonNull Context context) {
         this(context, null);
@@ -75,10 +75,22 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
         adapter.setOnPaginationListener(createOnPaginationListener());
 
         mPaginationAdapter.setLoadMoreRetryListener(mLoadMoreRetryListener);
+        bindAdapterWithItemListener();
     }
 
     public void setLoadMoreListener(LoadMoreListener listener) {
         mLoadMoreListener = listener;
+    }
+
+    public void setOnItemClickListener(ItemClickListener listener) {
+        mItemClickListener = listener;
+        bindAdapterWithItemListener();
+    }
+
+    private void bindAdapterWithItemListener() {
+        if (null != mPaginationAdapter && null != mItemClickListener) {
+            mPaginationAdapter.setItemClickListener(mItemClickListener);
+        }
     }
 
     private EndlessRecyclerViewScrollListener createScrollListener(@NonNull LayoutManager layout) {
@@ -120,10 +132,6 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
         }
     }
 
-    public LoadMoreRetryListener getLoadMoreRetryListener() {
-        return mLoadMoreRetryListener;
-    }
-
     @Override
     public void onPaginationLoaded(int page, int count, boolean success, boolean retry) {
         PaginationLog.d("PaginationRecyclerView onPaginationLoaded page="
@@ -159,11 +167,5 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
 
     public interface LoadMoreListener {
         void onLoadMoreStart();
-    }
-
-    public void onDestroy() {
-        ViewHolderFactory.release();
-        AppWatcher.INSTANCE.getObjectWatcher().watch(mPaginationAdapter);
-        AppWatcher.INSTANCE.getObjectWatcher().watch(this);
     }
 }

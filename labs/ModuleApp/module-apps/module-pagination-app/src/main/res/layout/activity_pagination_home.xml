@@ -16,6 +16,12 @@
         android:text="Pagination Grid Demo" />
 
     <Button
+        android:onClick="onShowSharedPaginationDemo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pagination Shared Demo" />
+
+    <Button
         android:onClick="onShowList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

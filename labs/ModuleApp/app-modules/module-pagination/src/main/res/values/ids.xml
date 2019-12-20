@@ -2,5 +2,7 @@
 <resources>
     <!-- define the view id for set load more behavior which view clicked -->
     <item type="id" name="pagination_load_more_retry"/>
+    <!-- define the view id for set item click behavior which view clicked -->
+    <item type="id" name="pagination_view_click"/>
 
 </resources>

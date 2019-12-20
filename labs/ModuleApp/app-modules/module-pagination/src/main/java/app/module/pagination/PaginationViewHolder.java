@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public abstract class PaginationViewHolder extends RecyclerView.ViewHolder {
     private int mViewType;
+    private ItemClickListener mItemClickListener;
 
     public PaginationViewHolder(int viewType, @NonNull View itemView) {
         super(itemView);
@@ -24,5 +25,13 @@ public abstract class PaginationViewHolder extends RecyclerView.ViewHolder {
 
     public int getViewType() {
         return mViewType;
+    }
+
+    void setItemClickListener(@NonNull ItemClickListener listener) {
+        mItemClickListener = listener;
+    }
+
+    protected <T> ItemClickListener<T> getItemClickListener() {
+        return mItemClickListener;
     }
 }
