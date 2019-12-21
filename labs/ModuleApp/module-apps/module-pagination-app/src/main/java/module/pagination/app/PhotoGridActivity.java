@@ -68,7 +68,7 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
         mPaginationRecyclerView.setLoadMoreListener(() -> mPaginationRecyclerView.loadNextPage());
         mPaginationRecyclerView.setOnItemClickListener(new ItemClickListener<String>() {
             @Override
-            public void onItemActionClick(String item, int actionId) {
+            public void onItemActionClick(int itemPosition, String item, int actionId) {
                 PaginationLog.d("onItemActionClick " + item);
             }
         });

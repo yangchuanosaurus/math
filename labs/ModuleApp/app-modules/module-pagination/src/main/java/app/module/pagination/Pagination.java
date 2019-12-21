@@ -2,22 +2,23 @@ package app.module.pagination;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pagination<T> {
+public class Pagination<T> implements Serializable {
     private final int mPageSize;
     private final int mPageStart;
     private int mPage;
     private List<T> mEntities;
     private boolean mHasMore;
 
-    private final PaginationLoader<T> mPaginationLoader;
+    private PaginationLoader<T> mPaginationLoader;
     private boolean mLoading;
 
     private List<PaginationTrackingListener> mTrackingListeners;
 
-    public Pagination(int pageSize, int pageStart, @NonNull PaginationLoader<T> paginationLoader) {
+    private Pagination(int pageSize, int pageStart) {
         mPageSize = pageSize;
         mPageStart = pageStart;
         mPage = pageStart - 1;
@@ -26,7 +27,15 @@ public class Pagination<T> {
 
         mEntities = new ArrayList<>();
         mTrackingListeners = new ArrayList<>();
+    }
 
+    public Pagination(int pageSize, int pageStart, @NonNull PaginationLoader<T> paginationLoader) {
+        this(pageSize, pageStart);
+
+        setPaginationLoader(paginationLoader);
+    }
+
+    private void setPaginationLoader(@NonNull PaginationLoader<T> paginationLoader) {
         mPaginationLoader = paginationLoader;
     }
 
@@ -155,5 +164,45 @@ public class Pagination<T> {
     interface PaginationListener {
         void onPageLoaded(int page, int start, int count);
         void onPageFailed(int page);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Pagination<?> that = (Pagination<?>) o;
+
+        if (mPageSize != that.mPageSize) return false;
+        if (mPageStart != that.mPageStart) return false;
+        if (mPage != that.mPage) return false;
+        if (mHasMore != that.mHasMore) return false;
+        if (mLoading != that.mLoading) return false;
+        return mEntities != null ? mEntities.equals(that.mEntities) : that.mEntities == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mPageSize;
+        result = 31 * result + mPageStart;
+        result = 31 * result + mPage;
+        result = 31 * result + (mEntities != null ? mEntities.hashCode() : 0);
+        result = 31 * result + (mHasMore ? 1 : 0);
+        result = 31 * result + (mLoading ? 1 : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Pagination{" +
+                "mPageSize=" + mPageSize +
+                ", mPageStart=" + mPageStart +
+                ", mPage=" + mPage +
+                ", mEntities=" + mEntities +
+                ", mHasMore=" + mHasMore +
+                ", mPaginationLoader=" + mPaginationLoader +
+                ", mLoading=" + mLoading +
+                ", mTrackingListeners=" + mTrackingListeners +
+                '}';
     }
 }

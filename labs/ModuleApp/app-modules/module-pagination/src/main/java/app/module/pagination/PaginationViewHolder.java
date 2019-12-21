@@ -48,7 +48,7 @@ public abstract class PaginationViewHolder<T> extends RecyclerView.ViewHolder
         if (isClickable()) {
             int pos = getAdapterPosition();
             T entity = mPagination.getEntityAtPosition(pos);
-            getItemClickListener().onItemActionClick(entity, action);
+            getItemClickListener().onItemActionClick(pos, entity, action);
         }
     }
 

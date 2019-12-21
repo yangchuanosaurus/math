@@ -13,11 +13,9 @@ import io.reactivex.schedulers.Schedulers;
 public class PhotoPaginationLoader implements PaginationLoader<String> {
     private String mEventId;
 
-    private MockPhotoDataSet mPhotoDataSet;
 
     public PhotoPaginationLoader(String eventId) {
         mEventId = eventId;
-        mPhotoDataSet = new MockPhotoDataSet();
     }
 
     @Override
@@ -27,7 +25,7 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
             @Override
             public List<String> call() throws Exception {
                 Thread.sleep(2000);
-                List<String> strings = mPhotoDataSet.getPage(page, pageSize);
+                List<String> strings = MockPhotoDataSet.getInstance().getPage(page, pageSize);
                 return strings == null ? new ArrayList<String>() : strings;
             }
         })
@@ -58,6 +56,14 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
             for (int i = 0; i < PAGE_SIZE * 20 + 1; i++) {
                 mPhotoList.add("Photo - " + (i + 1));
             }
+        }
+
+        private interface LazyLoader {
+            MockPhotoDataSet SINGLETON = new MockPhotoDataSet();
+        }
+
+        public static MockPhotoDataSet getInstance() {
+            return LazyLoader.SINGLETON;
         }
 
         List<String> getPage(int page, int pageSize) {

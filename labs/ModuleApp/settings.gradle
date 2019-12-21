@@ -8,4 +8,10 @@ include ':app-modules:module-pagination'
 include ':module-apps:module-auth-app'
 include ':module-apps:module-pagination-app'
 
+// Arch Modules
+include ':arch-components:arch-lifecycle-model'
+
+// Arch Module Apps
+include ':arch-apps:app-arch-lifecycle-model'
+
 rootProject.name='ModuleApp'

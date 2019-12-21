@@ -1,5 +1,6 @@
 package module.pagination.app.photos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,10 +46,15 @@ public class PhotoListFragment extends Fragment implements PaginationTrackingLis
         initPaginationRecyclerView();
         mPaginationRecyclerView.setOnItemClickListener(new ItemClickListener<String>() {
             @Override
-            public void onItemActionClick(String item, int actionId) {
+            public void onItemActionClick(int itemPosition, String item, int actionId) {
                 PaginationLog.d("On item clicked: " + item);
+                gotoPhotoSwiper(itemPosition, item);
             }
         });
+    }
+
+    private void gotoPhotoSwiper(int itemPosition, String item) {
+        PhotoSwiperActivity.startFromList(getContext(), mPhotoGridPagination, itemPosition);
     }
 
     @Override
