@@ -17,7 +17,6 @@ import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
 import arch.lifecycle.model.ArchLifecycleModel;
 import module.pagination.app.PhotoGridAdapter;
-import module.pagination.app.PhotoPaginationLoader;
 import module.pagination.app.R;
 
 public class PhotoSwiperActivity extends AppCompatActivity implements PaginationTrackingListener {
@@ -26,6 +25,7 @@ public class PhotoSwiperActivity extends AppCompatActivity implements Pagination
     private static final String INTENT_PAGINATION = "photos.pagination";
 
     private Pagination<String> mPagination;
+    private int mItemPosition;
     private PaginationRecyclerView mPaginationRecyclerView;
     private View mViewLoadingPhotos;
 
@@ -47,11 +47,17 @@ public class PhotoSwiperActivity extends AppCompatActivity implements Pagination
         mPagination = ArchLifecycleModel.get("PhotosPaginationLifecycle", null);
 
         if (null != getIntent()) {
-            int itemPosition = getIntent().getExtras().getInt(INTENT_ITEM_POSITION);
+            mItemPosition = getItemPosition(getIntent());
             mPagination = getPagination(getIntent());
-            mPagination.addTrackingListener(this);
-            PaginationLog.d("Restore itemPosition=" + itemPosition + ", pagination=" + mPagination);
         }
+
+        if (null != mPagination) {
+            mPagination.addTrackingListener(this);
+        } else {
+            // todo create Pagination by self
+        }
+
+        PaginationLog.d("Restore itemPosition=" + mItemPosition + ", pagination=" + mPagination);
 
         mViewLoadingPhotos = findViewById(R.id.view_photo_loading);
 
@@ -59,6 +65,22 @@ public class PhotoSwiperActivity extends AppCompatActivity implements Pagination
         mPaginationRecyclerView.setHasFixedSize(true);
 
         initPaginationRecyclerView();
+    }
+
+    private int getItemPosition(@NonNull Intent intent) {
+        if (null != getIntent().getExtras()) {
+            return getIntent().getExtras().getInt(INTENT_ITEM_POSITION);
+        }
+        return 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    private Pagination<String> getPagination(@NonNull Intent intent) {
+        if (null != getIntent().getExtras()) {
+            return (Pagination<String>) getIntent().getExtras().getSerializable(INTENT_PAGINATION);
+        }
+        return null;
     }
 
     private void initPaginationRecyclerView() {
@@ -85,15 +107,6 @@ public class PhotoSwiperActivity extends AppCompatActivity implements Pagination
 
     private PhotoGridAdapter createPhotoGridAdapter(@NonNull Pagination<String> pagination) {
         return new PhotoGridAdapter(this, GRID_COLUMN_COUNT, pagination);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Nullable
-    private Pagination<String> getPagination(@NonNull Intent intent) {
-        if (null != getIntent().getExtras()) {
-            return (Pagination<String>) getIntent().getExtras().getSerializable(INTENT_PAGINATION);
-        }
-        return null;
     }
 
     private void backToPhotoList() {
