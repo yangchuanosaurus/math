@@ -169,6 +169,7 @@ public class Pagination<T> implements Serializable, LifecycleModel<Pagination<T>
         pagination.mHasMore = this.mHasMore;
         pagination.mPage = this.mPage;
         pagination.mEntities = new ArrayList<>(this.mEntities);
+        pagination.mPaginationLoader = this.mPaginationLoader;
 
         return pagination;
     }
