@@ -42,6 +42,7 @@ dependencies {
 
 dependencies {
     implementation project(':app-modules:module-pagination')
+    implementation project(':arch-components:arch-lifecycle-model')
 }
 
 dependencies {

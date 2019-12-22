@@ -1,6 +1,5 @@
 package module.pagination.app.photos;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
+import arch.lifecycle.model.ArchLifecycleModel;
 import module.pagination.app.PhotoGridAdapter;
 import module.pagination.app.PhotoPaginationLoader;
 import module.pagination.app.R;
@@ -31,8 +31,15 @@ public class PhotoListFragment extends Fragment implements PaginationTrackingLis
     public static final int PAGE_SIZE = 25;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        PaginationLog.d("PhotoListFragment onCreate");
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        PaginationLog.d("PhotoListFragment onCreateView");
         return inflater.inflate(R.layout.fragment_photo_list, container, false);
     }
 
@@ -51,16 +58,28 @@ public class PhotoListFragment extends Fragment implements PaginationTrackingLis
                 gotoPhotoSwiper(itemPosition, item);
             }
         });
+
+        PaginationLog.d("PhotoListFragment onViewCreated");
     }
 
     private void gotoPhotoSwiper(int itemPosition, String item) {
-        PhotoSwiperActivity.startFromList(getContext(), mPhotoGridPagination, itemPosition);
+        ArchLifecycleModel.save("PhotosPaginationLifecycle", mPhotoGridPagination);
+        PaginationLog.d("gotoPhotoSwiper: " + mPhotoGridPagination);
+        PhotoSwiperActivity.startFromList(getContext(), itemPosition, mPhotoGridPagination.lifecycleClone());
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        // todo we should reload photos when view created instead of onStart for restore state when View not destroyed
         reloadPhotos();
+        PaginationLog.d("PhotoListFragment onStart");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PaginationLog.d("PhotoListFragment onDestroy");
     }
 
     // reload the first page

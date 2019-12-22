@@ -6,7 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pagination<T> implements Serializable {
+import arch.lifecycle.model.LifecycleModel;
+
+public class Pagination<T> implements Serializable, LifecycleModel<Pagination<T>> {
     private final int mPageSize;
     private final int mPageStart;
     private int mPage;
@@ -159,6 +161,16 @@ public class Pagination<T> implements Serializable {
 
     boolean hasMoreData() {
         return mHasMore;
+    }
+
+    @Override
+    public Pagination<T> lifecycleClone() {
+        Pagination<T> pagination = new Pagination<>(mPageSize, mPageStart);
+        pagination.mHasMore = this.mHasMore;
+        pagination.mPage = this.mPage;
+        pagination.mEntities = new ArrayList<>(this.mEntities);
+
+        return pagination;
     }
 
     interface PaginationListener {

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
+import arch.lifecycle.model.ArchLifecycleModel;
 import module.pagination.app.R;
 
 public class PhotoSwiperActivity extends AppCompatActivity {
@@ -18,7 +19,7 @@ public class PhotoSwiperActivity extends AppCompatActivity {
 
     private Pagination<String> mPagination;
 
-    public static void startFromList(@NonNull Context context, Pagination<String> pagination, int itemPosition) {
+    public static void startFromList(@NonNull Context context, int itemPosition, Pagination<String> pagination) {
         Intent intent = new Intent(context, PhotoSwiperActivity.class);
         intent.putExtra(INTENT_ITEM_POSITION, itemPosition);
         intent.putExtra(INTENT_PAGINATION, pagination);
@@ -30,12 +31,17 @@ public class PhotoSwiperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photos_swiper);
 
+        mPagination = ArchLifecycleModel.get("PhotosPaginationLifecycle", null);
+
         if (null != getIntent()) {
             int itemPosition = getIntent().getExtras().getInt(INTENT_ITEM_POSITION);
             mPagination = (Pagination<String>) getIntent().getExtras().getSerializable(INTENT_PAGINATION);
-
             PaginationLog.d("Restore itemPosition=" + itemPosition + ", pagination=" + mPagination);
         }
     }
 
+    private void backToPhotoList() {
+        ArchLifecycleModel.save("PhotosPaginationLifecycle", mPagination);
+        finish();
+    }
 }

@@ -32,4 +32,12 @@ package arch.lifecycle.model;
  * lifecycle related to the lifecycle, which defined by a String lifecycle
  * */
 public class ArchLifecycleModel {
+
+    public static void save(String lifecycle, LifecycleModel lifecycleModel) {
+    }
+
+    public static <T extends LifecycleModel> T get(String lifecycle, Object o) {
+        return null;
+    }
+
 }
