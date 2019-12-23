@@ -37,6 +37,14 @@ public class Pagination<T> implements Serializable, LifecycleModel<Pagination<T>
         setPaginationLoader(paginationLoader);
     }
 
+    public void merge(Pagination<T> pagination) {
+        this.mPage = pagination.mPage;
+        this.mHasMore = pagination.mHasMore;
+        if (!pagination.mEntities.isEmpty()) {
+            this.mEntities = new ArrayList<>(pagination.mEntities);
+        }
+    }
+
     private void setPaginationLoader(@NonNull PaginationLoader<T> paginationLoader) {
         mPaginationLoader = paginationLoader;
     }

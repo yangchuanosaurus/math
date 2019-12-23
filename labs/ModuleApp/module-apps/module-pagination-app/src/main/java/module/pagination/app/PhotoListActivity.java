@@ -3,18 +3,14 @@ package module.pagination.app;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import app.module.pagination.ItemClickListener;
 import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
-import app.module.pagination.ViewHolderFactory;
 import leakcanary.AppWatcher;
-import leakcanary.ObjectWatcher;
 
 public class PhotoListActivity extends AppCompatActivity implements PaginationTrackingListener {
 
@@ -37,25 +33,14 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
         mPaginationRecyclerView = findViewById(R.id.recycler_view);
         mPaginationRecyclerView.setHasFixedSize(true);
 
-        // Create a PaginationLoader for biz loader, apply biz part
-        PhotoPaginationLoader photoLoader = createPaginationLoader();
-        // shared the pagination between activities/fragments
-        mPhotoListPagination = createPhotoListPagination(photoLoader);
-
-        // created recycler view adapter for load page
-        PhotoListAdapter photoListAdapter = createPhotoListAdapter(mPhotoListPagination);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mPaginationRecyclerView.setLayoutManager(layoutManager);
-        mPaginationRecyclerView.setLoadMoreListener(() -> mPaginationRecyclerView.loadNextPage());
+        mPhotoListPagination = PhotoPaginationFactory
+                .bindPagination(this, mPaginationRecyclerView, PhotoPaginationFactory.PhotoListStyle.LIST);
         mPaginationRecyclerView.setOnItemClickListener(new ItemClickListener<String>() {
             @Override
             public void onItemActionClick(int itemPosition, String item, int actionId) {
                 PaginationLog.d("onItemActionClick " + item);
             }
         });
-
-        mPaginationRecyclerView.setAdapter(photoListAdapter);
 
         // Activity will tracking the pagination listener
         mPhotoListPagination.addTrackingListener(this);
@@ -79,23 +64,6 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
         showFailedResultsView(false);
         mPaginationRecyclerView.reload();
         showLoadingView(true);
-    }
-
-    private PhotoListAdapter createPhotoListAdapter(@NonNull Pagination<String> pagination) {
-        return new PhotoListAdapter(pagination);
-    }
-
-    private Pagination<String> createPhotoListPagination(PhotoPaginationLoader photoPaginationLoader) {
-        int pageSize = 20;
-        int pageStart = PhotoPaginationLoader.MockPhotoDataSet.PAGE_START;
-
-        return new Pagination<>(pageSize, pageStart, photoPaginationLoader);
-    }
-
-    private PhotoPaginationLoader createPaginationLoader() {
-        String eventId = "";
-
-        return new PhotoPaginationLoader(eventId);
     }
 
     private void showEmptyResultsView(boolean show) {

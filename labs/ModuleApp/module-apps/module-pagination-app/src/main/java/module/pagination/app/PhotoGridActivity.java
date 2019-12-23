@@ -3,17 +3,13 @@ package module.pagination.app;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import app.module.pagination.ItemClickListener;
 import app.module.pagination.Pagination;
 import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
-import app.module.pagination.ViewHolderFactory;
 import leakcanary.AppWatcher;
 
 /**
@@ -29,9 +25,6 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
     private View mViewLoadingPhotos;
     private View mViewFailedResults;
 
-    private static final int GRID_COLUMN_COUNT = 3;
-    public static final int PAGE_SIZE = 25;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,36 +37,14 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
         mPaginationRecyclerView = findViewById(R.id.recycler_view);
         mPaginationRecyclerView.setHasFixedSize(true);
 
-        // Create a PaginationLoader for biz loader, apply biz part
-        PhotoPaginationLoader photoLoader = createPaginationLoader();
-        // shared the pagination between activities/fragments
-        mPhotoGridPagination = createPhotoListPagination(photoLoader);
-
-        // created recycler view adapter for load page
-        PhotoGridAdapter photoGridAdapter = createPhotoGridAdapter(mPhotoGridPagination);
-
-        GridLayoutManager layoutManager = new GridLayoutManager(this, GRID_COLUMN_COUNT, RecyclerView.VERTICAL, false);
-        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                if (mPaginationRecyclerView.isLoadMorePosition(position)) {
-                    return GRID_COLUMN_COUNT;
-                } else {
-                    return 1;
-                }
-            }
-        });
-
-        mPaginationRecyclerView.setLayoutManager(layoutManager);
-        mPaginationRecyclerView.setLoadMoreListener(() -> mPaginationRecyclerView.loadNextPage());
+        mPhotoGridPagination = PhotoPaginationFactory
+                .bindPagination(this, mPaginationRecyclerView, PhotoPaginationFactory.PhotoListStyle.GRID);
         mPaginationRecyclerView.setOnItemClickListener(new ItemClickListener<String>() {
             @Override
             public void onItemActionClick(int itemPosition, String item, int actionId) {
                 PaginationLog.d("onItemActionClick " + item);
             }
         });
-
-        mPaginationRecyclerView.setAdapter(photoGridAdapter);
 
         // Activity will tracking the pagination listener
         mPhotoGridPagination.addTrackingListener(this);
@@ -97,22 +68,6 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
         showFailedResultsView(false);
         mPaginationRecyclerView.reload();
         showLoadingView(true);
-    }
-
-    private PhotoGridAdapter createPhotoGridAdapter(@NonNull Pagination<String> pagination) {
-        return new PhotoGridAdapter(this, GRID_COLUMN_COUNT, pagination);
-    }
-
-    private Pagination<String> createPhotoListPagination(PhotoPaginationLoader photoPaginationLoader) {
-        int pageStart = PhotoPaginationLoader.MockPhotoDataSet.PAGE_START;
-
-        return new Pagination<>(PAGE_SIZE, pageStart, photoPaginationLoader);
-    }
-
-    private PhotoPaginationLoader createPaginationLoader() {
-        String eventId = "";
-
-        return new PhotoPaginationLoader(eventId);
     }
 
     private void showEmptyResultsView(boolean show) {

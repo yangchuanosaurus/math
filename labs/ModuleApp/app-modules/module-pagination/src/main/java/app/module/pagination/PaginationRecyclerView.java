@@ -24,6 +24,8 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
 
     private ItemClickListener mItemClickListener;
 
+    private int mVerticalScrollOffset;
+
     public PaginationRecyclerView(@NonNull Context context) {
         this(context, null);
     }
@@ -64,7 +66,16 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
             if (null != mEndlessScrollListener) {
                 addOnScrollListener(mEndlessScrollListener);
             }
+            addOnScrollListener(new OnScrollListener() {
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    mVerticalScrollOffset += dy;
+                }
+            });
         }
+    }
+
+    public int getVerticalOffset() {
+        return computeVerticalScrollOffset();
     }
 
     public void setAdapter(@NonNull PaginationAdapter adapter) {

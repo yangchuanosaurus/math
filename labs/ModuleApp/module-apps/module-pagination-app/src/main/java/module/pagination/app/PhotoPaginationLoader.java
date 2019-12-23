@@ -48,7 +48,7 @@ public class PhotoPaginationLoader implements PaginationLoader<String> {
     public static class MockPhotoDataSet {
 
         public static final int PAGE_START = 1;
-        public static final int PAGE_SIZE = PhotoGridActivity.PAGE_SIZE;
+        public static final int PAGE_SIZE = PhotoPaginationFactory.PAGE_SIZE;
         private List<String> mPhotoList;
 
         private MockPhotoDataSet() {

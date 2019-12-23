@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import app.module.pagination.Pagination;
 import app.module.pagination.PaginationAdapter;
 import app.module.pagination.PaginationViewHolder;
-import app.module.pagination.ViewHolderFactory;
 
 /**
  * Created by Albert Zhao on 2019-12-19.
