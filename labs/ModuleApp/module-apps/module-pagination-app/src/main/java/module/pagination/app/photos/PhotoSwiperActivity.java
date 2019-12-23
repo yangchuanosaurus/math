@@ -48,7 +48,6 @@ public class PhotoSwiperActivity extends AppCompatActivity implements Pagination
 
     @Override
     public void onBackPressed() {
-        ArchLifecycleModel.save("PhotosPaginationLifecycle", mPagination);
         Intent intent = new Intent();
         addPaginationIntent(intent, 0, mPagination);
         setResult(RESULT_OK, intent);

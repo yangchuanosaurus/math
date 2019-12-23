@@ -82,7 +82,6 @@ public class PhotoListFragment extends Fragment implements PaginationTrackingLis
     }
 
     private void gotoPhotoSwiper(int itemPosition) {
-        ArchLifecycleModel.save("PhotosPaginationLifecycle", mPhotoGridPagination);
         PaginationLog.d("gotoPhotoSwiper: " + mPhotoGridPagination);
         PhotoSwiperActivity.startFromList(this, itemPosition, mPhotoGridPagination);
     }

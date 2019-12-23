@@ -36,7 +36,7 @@ dependencies {
 }
 
 dependencies {
-    implementation project(':arch-components:arch-lifecycle-model')
+
 }
 
 dependencies {
