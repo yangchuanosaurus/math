@@ -12,10 +12,10 @@ import app.module.pagination.Pagination;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
 import arch.lifecycle.model.ArchLifecycleModel;
-import module.pagination.app.PhotoPaginationFactory;
+import module.pagination.app.PhotoListPaginationFactory;
 import module.pagination.app.R;
 
-import static module.pagination.app.PhotoPaginationFactory.addPaginationIntent;
+import static app.module.pagination.PaginationFactory.addPaginationIntent;
 
 public class PhotoSwiperActivity extends AppCompatActivity implements PaginationTrackingListener {
 
@@ -39,8 +39,8 @@ public class PhotoSwiperActivity extends AppCompatActivity implements Pagination
         mPaginationRecyclerView = findViewById(R.id.recycler_view);
         mPaginationRecyclerView.setHasFixedSize(true);
 
-        mPagination = PhotoPaginationFactory.bindIntentPagination(this,
-                getIntent(), mPaginationRecyclerView, PhotoPaginationFactory.PhotoListStyle.GRID);
+        mPagination = PhotoListPaginationFactory.create().bindPagination(this,
+                getIntent(), mPaginationRecyclerView);
         mPagination.addTrackingListener(this);
 
         showLoadingView(false);

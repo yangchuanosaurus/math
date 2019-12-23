@@ -78,6 +78,11 @@ public class PaginationRecyclerView extends RecyclerView implements PaginationTr
         return computeVerticalScrollOffset();
     }
 
+    @NonNull
+    public Adapter getAdapter() {
+        return mPaginationAdapter;
+    }
+
     public void setAdapter(@NonNull PaginationAdapter adapter) {
         super.setAdapter(adapter);
         mPaginationAdapter = adapter;

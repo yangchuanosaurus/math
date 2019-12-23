@@ -12,11 +12,12 @@ import androidx.fragment.app.Fragment;
 
 import app.module.pagination.ItemClickListener;
 import app.module.pagination.Pagination;
+import app.module.pagination.PaginationFactory;
 import app.module.pagination.PaginationLog;
 import app.module.pagination.PaginationRecyclerView;
 import app.module.pagination.PaginationTrackingListener;
 import arch.lifecycle.model.ArchLifecycleModel;
-import module.pagination.app.PhotoPaginationFactory;
+import module.pagination.app.PhotoGridPaginationFactory;
 import module.pagination.app.R;
 
 import static android.app.Activity.RESULT_OK;
@@ -54,9 +55,10 @@ public class PhotoListFragment extends Fragment implements PaginationTrackingLis
     }
 
     private void bindRecycleView(Intent intent) {
+        // if activity destory-ed and restart, the pagination intent will be lose
         if (null == mPhotoGridPagination) {
-            mPhotoGridPagination = PhotoPaginationFactory
-                    .bindIntentPagination(getContext(), intent, mPaginationRecyclerView, PhotoPaginationFactory.PhotoListStyle.GRID);
+            mPhotoGridPagination = PhotoGridPaginationFactory.create()
+                    .bindPagination(getContext(), intent, mPaginationRecyclerView);
 
             mPaginationRecyclerView.setOnItemClickListener(new ItemClickListener<String>() {
                 @Override
@@ -69,7 +71,7 @@ public class PhotoListFragment extends Fragment implements PaginationTrackingLis
             mPhotoGridPagination.addTrackingListener(this);
         } else {
             if (null != intent) {
-                Pagination<String> intentPagination = PhotoPaginationFactory.getIntentPagination(intent);
+                Pagination<String> intentPagination = PaginationFactory.getIntentPagination(intent);
                 if (null != intentPagination) {
                     // merge intent pagination
                     mPhotoGridPagination.merge(intentPagination);

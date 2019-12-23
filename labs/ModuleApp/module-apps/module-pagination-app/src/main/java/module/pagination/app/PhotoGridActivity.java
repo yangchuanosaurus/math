@@ -37,8 +37,8 @@ public class PhotoGridActivity extends AppCompatActivity implements PaginationTr
         mPaginationRecyclerView = findViewById(R.id.recycler_view);
         mPaginationRecyclerView.setHasFixedSize(true);
 
-        mPhotoGridPagination = PhotoPaginationFactory
-                .bindPagination(this, mPaginationRecyclerView, PhotoPaginationFactory.PhotoListStyle.GRID);
+        mPhotoGridPagination = PhotoGridPaginationFactory.create()
+                .bindPagination(this, getIntent(), mPaginationRecyclerView);
         mPaginationRecyclerView.setOnItemClickListener(new ItemClickListener<String>() {
             @Override
             public void onItemActionClick(int itemPosition, String item, int actionId) {

@@ -33,8 +33,9 @@ public class PhotoListActivity extends AppCompatActivity implements PaginationTr
         mPaginationRecyclerView = findViewById(R.id.recycler_view);
         mPaginationRecyclerView.setHasFixedSize(true);
 
-        mPhotoListPagination = PhotoPaginationFactory
-                .bindPagination(this, mPaginationRecyclerView, PhotoPaginationFactory.PhotoListStyle.LIST);
+
+        mPhotoListPagination = PhotoListPaginationFactory.create()
+                .bindPagination(this, getIntent(), mPaginationRecyclerView);
         mPaginationRecyclerView.setOnItemClickListener(new ItemClickListener<String>() {
             @Override
             public void onItemActionClick(int itemPosition, String item, int actionId) {
