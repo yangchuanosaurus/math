@@ -99,11 +99,17 @@ public class Pagination<T> implements Serializable {
      * reload entities of page start (first page)
      * @param listener of the first page loaded
      * */
-    void reload(PaginationListener listener) {
+    void reload(PaginationAdapter adapter, PaginationListener listener) {
         PaginationLog.d("Pagination reload");
         mPage = mPageStart - 1;
         mHasMore = true;
+        boolean hasData = mEntities.size() > 0;
         mEntities = new ArrayList<>();
+        if (hasData) {
+            // remove all data and notify recycler view to refresh data
+            adapter.notifyDataSetChanged();
+        }
+
         loadPage(mPageStart, listener);
     }
 

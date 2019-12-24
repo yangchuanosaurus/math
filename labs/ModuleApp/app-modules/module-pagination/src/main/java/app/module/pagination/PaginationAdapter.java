@@ -28,9 +28,7 @@ public abstract class PaginationAdapter<E> extends RecyclerView.Adapter<Paginati
     }
 
     void reload() {
-        mPagination.reload(mPaginationListener);
-        // remove all ViewHolders since no Entity
-        notifyDataSetChanged();
+        mPagination.reload(this, mPaginationListener);
     }
 
     void loadNextPage() {
