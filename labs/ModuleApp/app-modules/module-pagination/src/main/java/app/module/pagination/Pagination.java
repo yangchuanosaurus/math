@@ -59,11 +59,20 @@ public class Pagination<T> implements Serializable {
         return page == mPageStart;
     }
 
-    int getEntitiesCount() {
+    /**
+     * get count of entities
+     * @return count of entities
+     * */
+    public int getEntitiesCount() {
         return mEntities.size();
     }
 
-    T getEntityAtPosition(int pos) {
+    /**
+     * get entity at position
+     * @param pos of entity
+     * @return entity
+     * */
+    public T getEntityAtPosition(int pos) {
         return mEntities.get(pos);
     }
 
